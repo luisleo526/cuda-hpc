@@ -8,8 +8,8 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/tmp/tmp.56DmBG6Fyz/main.cu" "CMakeFiles/cuhpc.dir/main.cu.o" "gcc" "CMakeFiles/cuhpc.dir/main.cu.o.d"
-  "/tmp/tmp.56DmBG6Fyz/src/data.cu" "CMakeFiles/cuhpc.dir/src/data.cu.o" "gcc" "CMakeFiles/cuhpc.dir/src/data.cu.o.d"
+  "/home/leo/cuda-hpc/main.cu" "CMakeFiles/cuhpc.dir/main.cu.o" "gcc" "CMakeFiles/cuhpc.dir/main.cu.o.d"
+  "/home/leo/cuda-hpc/src/data.cu" "CMakeFiles/cuhpc.dir/src/data.cu.o" "gcc" "CMakeFiles/cuhpc.dir/src/data.cu.o.d"
   )
 
 # Targets to which this target links.

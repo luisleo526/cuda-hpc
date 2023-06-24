@@ -8,74 +8,74 @@
 		<Option virtualFolders="CMake Files\;"/>
 		<Build>
 			<Target title="all">
-				<Option working_dir="/tmp/tmp.56DmBG6Fyz/cmake-build-debug"/>
+				<Option working_dir="/home/leo/cuda-hpc/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/gmake -j32 -f &quot;/tmp/tmp.56DmBG6Fyz/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
-					<CompileFile command="/usr/bin/gmake -j32 -f &quot;/tmp/tmp.56DmBG6Fyz/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/gmake -j32 -f &quot;/tmp/tmp.56DmBG6Fyz/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/gmake -j32 -f &quot;/tmp/tmp.56DmBG6Fyz/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j32 -f &quot;/home/leo/cuda-hpc/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j32 -f &quot;/home/leo/cuda-hpc/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j32 -f &quot;/home/leo/cuda-hpc/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j32 -f &quot;/home/leo/cuda-hpc/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="cuhpc">
-				<Option output="/tmp/tmp.56DmBG6Fyz/cmake-build-debug/cuhpc" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/tmp/tmp.56DmBG6Fyz/cmake-build-debug"/>
+				<Option output="/home/leo/cuda-hpc/cmake-build-debug/cuhpc" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/leo/cuda-hpc/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler/>
 				<MakeCommands>
-					<Build command="/usr/bin/gmake -j32 -f &quot;/tmp/tmp.56DmBG6Fyz/cmake-build-debug/Makefile&quot;  VERBOSE=1 cuhpc"/>
-					<CompileFile command="/usr/bin/gmake -j32 -f &quot;/tmp/tmp.56DmBG6Fyz/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/gmake -j32 -f &quot;/tmp/tmp.56DmBG6Fyz/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/gmake -j32 -f &quot;/tmp/tmp.56DmBG6Fyz/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j32 -f &quot;/home/leo/cuda-hpc/cmake-build-debug/Makefile&quot;  VERBOSE=1 cuhpc"/>
+					<CompileFile command="/usr/bin/make -j32 -f &quot;/home/leo/cuda-hpc/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j32 -f &quot;/home/leo/cuda-hpc/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j32 -f &quot;/home/leo/cuda-hpc/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="cuhpc/fast">
-				<Option output="/tmp/tmp.56DmBG6Fyz/cmake-build-debug/cuhpc" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/tmp/tmp.56DmBG6Fyz/cmake-build-debug"/>
+				<Option output="/home/leo/cuda-hpc/cmake-build-debug/cuhpc" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/leo/cuda-hpc/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler/>
 				<MakeCommands>
-					<Build command="/usr/bin/gmake -j32 -f &quot;/tmp/tmp.56DmBG6Fyz/cmake-build-debug/Makefile&quot;  VERBOSE=1 cuhpc/fast"/>
-					<CompileFile command="/usr/bin/gmake -j32 -f &quot;/tmp/tmp.56DmBG6Fyz/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/gmake -j32 -f &quot;/tmp/tmp.56DmBG6Fyz/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/gmake -j32 -f &quot;/tmp/tmp.56DmBG6Fyz/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j32 -f &quot;/home/leo/cuda-hpc/cmake-build-debug/Makefile&quot;  VERBOSE=1 cuhpc/fast"/>
+					<CompileFile command="/usr/bin/make -j32 -f &quot;/home/leo/cuda-hpc/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j32 -f &quot;/home/leo/cuda-hpc/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j32 -f &quot;/home/leo/cuda-hpc/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="edit_cache">
-				<Option working_dir="/tmp/tmp.56DmBG6Fyz/cmake-build-debug"/>
+				<Option working_dir="/home/leo/cuda-hpc/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/gmake -j32 -f &quot;/tmp/tmp.56DmBG6Fyz/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
-					<CompileFile command="/usr/bin/gmake -j32 -f &quot;/tmp/tmp.56DmBG6Fyz/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/gmake -j32 -f &quot;/tmp/tmp.56DmBG6Fyz/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/gmake -j32 -f &quot;/tmp/tmp.56DmBG6Fyz/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j32 -f &quot;/home/leo/cuda-hpc/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j32 -f &quot;/home/leo/cuda-hpc/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j32 -f &quot;/home/leo/cuda-hpc/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j32 -f &quot;/home/leo/cuda-hpc/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="rebuild_cache">
-				<Option working_dir="/tmp/tmp.56DmBG6Fyz/cmake-build-debug"/>
+				<Option working_dir="/home/leo/cuda-hpc/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/gmake -j32 -f &quot;/tmp/tmp.56DmBG6Fyz/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
-					<CompileFile command="/usr/bin/gmake -j32 -f &quot;/tmp/tmp.56DmBG6Fyz/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/gmake -j32 -f &quot;/tmp/tmp.56DmBG6Fyz/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/gmake -j32 -f &quot;/tmp/tmp.56DmBG6Fyz/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j32 -f &quot;/home/leo/cuda-hpc/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j32 -f &quot;/home/leo/cuda-hpc/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j32 -f &quot;/home/leo/cuda-hpc/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j32 -f &quot;/home/leo/cuda-hpc/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/tmp/tmp.56DmBG6Fyz/main.cu">
+		<Unit filename="/home/leo/cuda-hpc/main.cu">
 			<Option target="cuhpc"/>
 		</Unit>
-		<Unit filename="/tmp/tmp.56DmBG6Fyz/src/data.cu">
+		<Unit filename="/home/leo/cuda-hpc/src/data.cu">
 			<Option target="cuhpc"/>
 		</Unit>
-		<Unit filename="/tmp/tmp.56DmBG6Fyz/src/data.cuh">
+		<Unit filename="/home/leo/cuda-hpc/src/data.cuh">
 			<Option target="cuhpc"/>
 		</Unit>
-		<Unit filename="/tmp/tmp.56DmBG6Fyz/CMakeLists.txt">
+		<Unit filename="/home/leo/cuda-hpc/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>
 	</Project>
