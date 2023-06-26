@@ -53,6 +53,7 @@ namespace BC {
         INFO() : type(CELL_CENTER_NEUMANN), value(0.0) {};
 
         INFO(int t, double v) : type(t), value(v) {};
+        INFO(int t) : type(t), value(0.0) {};
     };
 }
 
@@ -108,6 +109,9 @@ public:
 
     data(Idim3 _NodeSize, Idim3 _GridSize, Idim3 _id, int _gid, int _dim, bool pinned);
 
+    void LinkNeighbor();
+    void LinkNeighbor(data *_r, data *_l);
+    void LinkNeighbor(data *_r, data *_l, data *_u, data *_d);
     void LinkNeighbor(data *_r, data *_l, data *_u, data *_d, data *_f, data *_b);
 
     void set(double val, int i, int j, int k, int d);

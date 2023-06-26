@@ -76,6 +76,33 @@ double data::get(int i, int j, int k, int d) {
     return host[map_index(i, j, k, d)];
 }
 
+void data::LinkNeighbor() {
+    neighbor[XL] = this;
+    neighbor[XR] = this;
+    neighbor[YL] = this;
+    neighbor[YR] = this;
+    neighbor[ZL] = this;
+    neighbor[ZR] = this;
+}
+
+void data::LinkNeighbor(data *_r, data *_l) {
+    neighbor[XL] = _l;
+    neighbor[XR] = _r;
+    neighbor[YL] = this;
+    neighbor[YR] = this;
+    neighbor[ZL] = this;
+    neighbor[ZR] = this;
+}
+
+void data::LinkNeighbor(data *_r, data *_l, data *_u, data *_d) {
+    neighbor[XL] = _l;
+    neighbor[XR] = _r;
+    neighbor[YL] = _d;
+    neighbor[YR] = _u;
+    neighbor[ZL] = this;
+    neighbor[ZR] = this;
+}
+
 void data::LinkNeighbor(data *_r, data *_l, data *_u, data *_d, data *_f, data *_b) {
     neighbor[XL] = _l;
     neighbor[XR] = _r;

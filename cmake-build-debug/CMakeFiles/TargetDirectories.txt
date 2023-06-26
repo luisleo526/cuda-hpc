@@ -1,3 +1,0 @@
-/home/leo/cuda-hpc/cmake-build-debug/CMakeFiles/cuhpc.dir
-/home/leo/cuda-hpc/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/leo/cuda-hpc/cmake-build-debug/CMakeFiles/rebuild_cache.dir

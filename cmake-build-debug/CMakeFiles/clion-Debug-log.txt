@@ -1,4 +1,0 @@
-/home/leo/.cache/JetBrains/RemoteDev/dist/8e610c3e73c1d_CLion-2023.1.3/bin/cmake/linux/x64/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CUDA_COMPILER=/usr/local/cuda/bin/nvcc -G "CodeBlocks - Unix Makefiles" -S /home/leo/cuda-hpc -B /home/leo/cuda-hpc/cmake-build-debug
--- Configuring done
--- Generating done
--- Build files have been written to: /home/leo/cuda-hpc/cmake-build-debug
