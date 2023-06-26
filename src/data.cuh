@@ -76,23 +76,14 @@ private:
     int const ZR = 5;
 
     void XL_NEUMANN(int d);
-
     void XL_DIRICHLET(int d);
-
     void XL_PERIODIC(int d);
-
     void XL_NO_SLIP(int d);
-
     void XL_FREE_SLIP(int d);
-
     void XR_NEUMANN(int d);
-
     void XR_DIRICHLET(int d);
-
     void XR_PERIODIC(int d);
-
     void XR_NO_SLIP(int d);
-
     void XR_FREE_SLIP(int d);
 
 public:
@@ -121,18 +112,15 @@ public:
     double get(int i, int j, int k, int d);
 
     void assign_bc(int d, BC::INFO xr, BC::INFO xl);
-
     void assign_bc(int d, BC::INFO xr, BC::INFO xl, BC::INFO yr, BC::INFO yl);
-
     void assign_bc(int d, BC::INFO xr, BC::INFO xl, BC::INFO yr, BC::INFO yl, BC::INFO zr, BC::INFO zl);
 
     void apply_bc_x(int d);
-
     void apply_bc_y(int d);
-
     void apply_bc_z(int d);
 
     void ToDevice();
+    void ToHost();
 
 };
 

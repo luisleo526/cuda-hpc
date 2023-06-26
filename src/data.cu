@@ -49,6 +49,23 @@ data::data(Idim3 _NodeSize, Idim3 _GridSize, Idim3 _id, int _gid, int _dim, bool
 
 }
 
+void data::ToDevice() {
+
+    cudaSetDevice(gid);
+    cudaCheckErrors("cudaSetDevice fail");
+    cudaMemcpy(device, host, dim * size, cudaMemcpyHostToDevice);
+    cudaCheckErrors("cudaMemcpy fail");
+
+}
+
+void data::ToHost() {
+    cudaSetDevice(gid);
+    cudaCheckErrors("cudaSetDevice fail");
+    cudaMemcpy(host, device, dim * size, cudaMemcpyDeviceToHost);
+    cudaCheckErrors("cudaMemcpy fail");
+}
+
+
 int data::map_index(int i, int j, int k, int d) {
 /*               |                         |
  *    -3, -2, -1 | 0, 1, 2, ...,  N-2, N-1 | N, N+1, N+2
@@ -343,13 +360,5 @@ void data::XR_FREE_SLIP(int d) {
     }
 }
 
-void data::ToDevice() {
-
-    cudaSetDevice(gid);
-    cudaCheckErrors("cudaSetDevice fail");
-    cudaMemcpy(device, host, dim * size, cudaMemcpyHostToDevice);
-    cudaCheckErrors("cudaMemcpy fail");
-
-}
 
 

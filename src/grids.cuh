@@ -19,7 +19,6 @@ struct DOMAIN_INFO {
 
     DOMAIN_INFO(double xl, double xr, double yl, double yr, double zl, double zr) : xl(xl), xr(xr), yl(yl), yr(yr),
                                                                                     zl(zl), zr(zr) {}
-
 };
 
 class grids : public data {
