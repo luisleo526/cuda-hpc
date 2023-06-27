@@ -5,57 +5,11 @@
 #include <cuda.h>
 #include <assert.h>
 #include <iostream>
-
-#define cudaCheckErrors(msg) \
-    do { \
-        cudaError_t __err = cudaGetLastError(); \
-        if (__err != cudaSuccess) { \
-            fprintf(stderr, "Fatal error: %s (%s at %s:%d)\n", \
-                msg, cudaGetErrorString(__err), \
-                __FILE__, __LINE__); \
-            fprintf(stderr, "*** FAILED - ABORTING\n"); \
-            exit(1); \
-        } \
-    } while (0)
+#include "utils.cuh"
+#include "constants.cuh"
 
 #ifndef CUHPC_DATA_CUH
 #define CUHPC_DATA_CUH
-
-namespace BC {
-    int const CELL_CENTER_NEUMANN = 0;
-    int const CELL_CENTER_DIRICHLET = 1;
-    int const CELL_CENTER_NO_SLIP = 2;
-    int const CELL_CENTER_FREE_SLIP = 3;
-    int const CELL_CENTER_PERIODIC = 4;
-
-    int const CELL_FACE_X_NEUMANN = 10;
-    int const CELL_FACE_X_DIRICHLET = 11;
-    int const CELL_FACE_X_NO_SLIP = 12;
-    int const CELL_FACE_X_FREE_SLIP = 13;
-    int const CELL_FACE_X_PERIODIC = 14;
-
-    int const CELL_FACE_Y_NEUMANN = 20;
-    int const CELL_FACE_Y_DIRICHLET = 21;
-    int const CELL_FACE_Y_NO_SLIP = 22;
-    int const CELL_FACE_Y_FREE_SLIP = 23;
-    int const CELL_FACE_Y_PERIODIC = 24;
-
-    int const CELL_FACE_Z_NEUMANN = 30;
-    int const CELL_FACE_Z_DIRICHLET = 31;
-    int const CELL_FACE_Z_NO_SLIP = 32;
-    int const CELL_FACE_Z_FREE_SLIP = 33;
-    int const CELL_FACE_Z_PERIODIC = 34;
-
-    struct INFO {
-        int type = CELL_CENTER_NEUMANN;
-        double value = 0.0;
-
-        INFO() : type(CELL_CENTER_NEUMANN), value(0.0) {};
-
-        INFO(int t, double v) : type(t), value(v) {};
-        INFO(int t) : type(t), value(0.0) {};
-    };
-}
 
 struct Idim3 {
     int x, y, z;
@@ -68,12 +22,6 @@ struct Idim3 {
 class data {
 
 private:
-    int const XL = 0;
-    int const XR = 1;
-    int const YL = 2;
-    int const YR = 3;
-    int const ZL = 4;
-    int const ZR = 5;
 
     void XL_NEUMANN(int d);
     void XL_DIRICHLET(int d);

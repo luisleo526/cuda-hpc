@@ -94,74 +94,74 @@ double data::get(int i, int j, int k, int d) {
 }
 
 void data::LinkNeighbor() {
-    neighbor[XL] = this;
-    neighbor[XR] = this;
-    neighbor[YL] = this;
-    neighbor[YR] = this;
-    neighbor[ZL] = this;
-    neighbor[ZR] = this;
+    neighbor[GRID::XL] = this;
+    neighbor[GRID::XR] = this;
+    neighbor[GRID::YL] = this;
+    neighbor[GRID::YR] = this;
+    neighbor[GRID::ZL] = this;
+    neighbor[GRID::ZR] = this;
 }
 
 void data::LinkNeighbor(data *_r, data *_l) {
-    neighbor[XL] = _l;
-    neighbor[XR] = _r;
-    neighbor[YL] = this;
-    neighbor[YR] = this;
-    neighbor[ZL] = this;
-    neighbor[ZR] = this;
+    neighbor[GRID::XL] = _l;
+    neighbor[GRID::XR] = _r;
+    neighbor[GRID::YL] = this;
+    neighbor[GRID::YR] = this;
+    neighbor[GRID::ZL] = this;
+    neighbor[GRID::ZR] = this;
 }
 
 void data::LinkNeighbor(data *_r, data *_l, data *_u, data *_d) {
-    neighbor[XL] = _l;
-    neighbor[XR] = _r;
-    neighbor[YL] = _d;
-    neighbor[YR] = _u;
-    neighbor[ZL] = this;
-    neighbor[ZR] = this;
+    neighbor[GRID::XL] = _l;
+    neighbor[GRID::XR] = _r;
+    neighbor[GRID::YL] = _d;
+    neighbor[GRID::YR] = _u;
+    neighbor[GRID::ZL] = this;
+    neighbor[GRID::ZR] = this;
 }
 
 void data::LinkNeighbor(data *_r, data *_l, data *_u, data *_d, data *_f, data *_b) {
-    neighbor[XL] = _l;
-    neighbor[XR] = _r;
-    neighbor[YL] = _d;
-    neighbor[YR] = _u;
-    neighbor[ZL] = _b;
-    neighbor[ZR] = _f;
+    neighbor[GRID::XL] = _l;
+    neighbor[GRID::XR] = _r;
+    neighbor[GRID::YL] = _d;
+    neighbor[GRID::YR] = _u;
+    neighbor[GRID::ZL] = _b;
+    neighbor[GRID::ZR] = _f;
 }
 
 void data::assign_bc(int d, BC::INFO xr, BC::INFO xl) {
     BC::INFO buffer;
-    bc_type[d][XL] = xl;
-    bc_type[d][XR] = xr;
-    bc_type[d][YL] = buffer;
-    bc_type[d][YR] = buffer;
-    bc_type[d][ZL] = buffer;
-    bc_type[d][ZR] = buffer;
+    bc_type[d][GRID::XL] = xl;
+    bc_type[d][GRID::XR] = xr;
+    bc_type[d][GRID::YL] = buffer;
+    bc_type[d][GRID::YR] = buffer;
+    bc_type[d][GRID::ZL] = buffer;
+    bc_type[d][GRID::ZR] = buffer;
 }
 
 void data::assign_bc(int d, BC::INFO xr, BC::INFO xl, BC::INFO yr, BC::INFO yl) {
     BC::INFO buffer;
-    bc_type[d][XL] = xl;
-    bc_type[d][XR] = xr;
-    bc_type[d][YL] = yl;
-    bc_type[d][YR] = yr;
-    bc_type[d][ZL] = buffer;
-    bc_type[d][ZR] = buffer;
+    bc_type[d][GRID::XL] = xl;
+    bc_type[d][GRID::XR] = xr;
+    bc_type[d][GRID::YL] = yl;
+    bc_type[d][GRID::YR] = yr;
+    bc_type[d][GRID::ZL] = buffer;
+    bc_type[d][GRID::ZR] = buffer;
 }
 
 void data::assign_bc(int d, BC::INFO xr, BC::INFO xl, BC::INFO yr, BC::INFO yl, BC::INFO zr, BC::INFO zl) {
-    bc_type[d][XL] = xl;
-    bc_type[d][XR] = xr;
-    bc_type[d][YL] = yl;
-    bc_type[d][YR] = yr;
-    bc_type[d][ZL] = zl;
-    bc_type[d][ZR] = zr;
+    bc_type[d][GRID::XL] = xl;
+    bc_type[d][GRID::XR] = xr;
+    bc_type[d][GRID::YL] = yl;
+    bc_type[d][GRID::YR] = yr;
+    bc_type[d][GRID::ZL] = zl;
+    bc_type[d][GRID::ZR] = zr;
 }
 
 void data::apply_bc_x(int d) {
 
     if (id.x == 0) {
-        switch (bc_type[d][XL].type % 10) {
+        switch (bc_type[d][GRID::XL].type % 10) {
 
             case BC::CELL_CENTER_NEUMANN:
                 XL_NEUMANN(d);
@@ -176,7 +176,7 @@ void data::apply_bc_x(int d) {
                 break;
 
             case BC::CELL_CENTER_NO_SLIP:
-                if (bc_type[d][XL].type == BC::CELL_FACE_X_NO_SLIP) {
+                if (bc_type[d][GRID::XL].type == BC::CELL_FACE_X_NO_SLIP) {
                     for (int k = 0; k < NodeSize.z; k++) {
                         for (int j = 0; j < NodeSize.y; j++) {
                             set(0.0, -1, j, k, d);
@@ -190,7 +190,7 @@ void data::apply_bc_x(int d) {
                 break;
 
             case BC::CELL_CENTER_FREE_SLIP:
-                if (bc_type[d][XL].type == BC::CELL_FACE_X_FREE_SLIP) {
+                if (bc_type[d][GRID::XL].type == BC::CELL_FACE_X_FREE_SLIP) {
                     for (int k = 0; k < NodeSize.z; k++) {
                         for (int j = 0; j < NodeSize.y; j++) {
                             set(0.0, -1, j, k, d);
@@ -209,7 +209,7 @@ void data::apply_bc_x(int d) {
     }
 
     if (id.x == GridSize.x - 1) {
-        switch (bc_type[d][XR].type % 10) {
+        switch (bc_type[d][GRID::XR].type % 10) {
 
             case BC::CELL_CENTER_NEUMANN:
                 XR_NEUMANN(d);
@@ -224,7 +224,7 @@ void data::apply_bc_x(int d) {
                 break;
 
             case BC::CELL_CENTER_NO_SLIP:
-                if (bc_type[d][XR].type == BC::CELL_FACE_X_NO_SLIP) {
+                if (bc_type[d][GRID::XR].type == BC::CELL_FACE_X_NO_SLIP) {
                     for (int k = 0; k < NodeSize.z; k++) {
                         for (int j = 0; j < NodeSize.y; j++) {
                             set(0.0, NodeSize.x - 1, j, k, d);
@@ -239,7 +239,7 @@ void data::apply_bc_x(int d) {
                 break;
 
             case BC::CELL_CENTER_FREE_SLIP:
-                if (bc_type[d][XR].type == BC::CELL_FACE_X_FREE_SLIP) {
+                if (bc_type[d][GRID::XR].type == BC::CELL_FACE_X_FREE_SLIP) {
                     for (int k = 0; k < NodeSize.z; k++) {
                         for (int j = 0; j < NodeSize.y; j++) {
                             set(0.0, NodeSize.x - 1, j, k, d);
@@ -263,9 +263,9 @@ void data::apply_bc_x(int d) {
 void data::XL_NEUMANN(int d) {
     for (int k = 0; k < NodeSize.z; k++) {
         for (int j = 0; j < NodeSize.y; j++) {
-            set(get(0, j, k, d) - bc_type[d][XL].value, -1, j, k, d);
-            set(get(-1, j, k, d) - bc_type[d][XL].value, -2, j, k, d);
-            set(get(-2, j, k, d) - bc_type[d][XL].value, -3, j, k, d);
+            set(get(0, j, k, d) - bc_type[d][GRID::XL].value, -1, j, k, d);
+            set(get(-1, j, k, d) - bc_type[d][GRID::XL].value, -2, j, k, d);
+            set(get(-2, j, k, d) - bc_type[d][GRID::XL].value, -3, j, k, d);
         }
     }
 }
@@ -273,9 +273,9 @@ void data::XL_NEUMANN(int d) {
 void data::XL_DIRICHLET(int d) {
     for (int k = 0; k < NodeSize.z; k++) {
         for (int j = 0; j < NodeSize.y; j++) {
-            set(bc_type[d][XL].value, -3, j, k, d);
-            set(bc_type[d][XL].value, -2, j, k, d);
-            set(bc_type[d][XL].value, -1, j, k, d);
+            set(bc_type[d][GRID::XL].value, -3, j, k, d);
+            set(bc_type[d][GRID::XL].value, -2, j, k, d);
+            set(bc_type[d][GRID::XL].value, -1, j, k, d);
         }
     }
 }
@@ -283,9 +283,9 @@ void data::XL_DIRICHLET(int d) {
 void data::XL_PERIODIC(int d) {
     for (int k = 0; k < NodeSize.z; k++) {
         for (int j = 0; j < NodeSize.y; j++) {
-            set(neighbor[XL]->get(NodeSize.x - 1, j, k, d), -1, j, k, d);
-            set(neighbor[XL]->get(NodeSize.x - 2, j, k, d), -2, j, k, d);
-            set(neighbor[XL]->get(NodeSize.x - 3, j, k, d), -3, j, k, d);
+            set(neighbor[GRID::XL]->get(NodeSize.x - 1, j, k, d), -1, j, k, d);
+            set(neighbor[GRID::XL]->get(NodeSize.x - 2, j, k, d), -2, j, k, d);
+            set(neighbor[GRID::XL]->get(NodeSize.x - 3, j, k, d), -3, j, k, d);
         }
     }
 }
@@ -313,9 +313,9 @@ void data::XL_FREE_SLIP(int d) {
 void data::XR_NEUMANN(int d) {
     for (int k = 0; k < NodeSize.z; k++) {
         for (int j = 0; j < NodeSize.y; j++) {
-            set(get(NodeSize.x - 1, j, k, d) + bc_type[d][XR].value, NodeSize.x, j, k, d);
-            set(get(NodeSize.x, j, k, d) + bc_type[d][XR].value, NodeSize.x + 1, j, k, d);
-            set(get(NodeSize.x + 1, j, k, d) + bc_type[d][XR].value, NodeSize.x + 2, j, k, d);
+            set(get(NodeSize.x - 1, j, k, d) + bc_type[d][GRID::XR].value, NodeSize.x, j, k, d);
+            set(get(NodeSize.x, j, k, d) + bc_type[d][GRID::XR].value, NodeSize.x + 1, j, k, d);
+            set(get(NodeSize.x + 1, j, k, d) + bc_type[d][GRID::XR].value, NodeSize.x + 2, j, k, d);
         }
     }
 }
@@ -323,9 +323,9 @@ void data::XR_NEUMANN(int d) {
 void data::XR_DIRICHLET(int d) {
     for (int k = 0; k < NodeSize.z; k++) {
         for (int j = 0; j < NodeSize.y; j++) {
-            set(bc_type[d][XR].value, NodeSize.x, j, k, d);
-            set(bc_type[d][XR].value, NodeSize.x + 1, j, k, d);
-            set(bc_type[d][XR].value, NodeSize.x + 2, j, k, d);
+            set(bc_type[d][GRID::XR].value, NodeSize.x, j, k, d);
+            set(bc_type[d][GRID::XR].value, NodeSize.x + 1, j, k, d);
+            set(bc_type[d][GRID::XR].value, NodeSize.x + 2, j, k, d);
         }
     }
 }
@@ -333,9 +333,9 @@ void data::XR_DIRICHLET(int d) {
 void data::XR_PERIODIC(int d) {
     for (int k = 0; k < NodeSize.z; k++) {
         for (int j = 0; j < NodeSize.y; j++) {
-            set(neighbor[XR]->get(0, j, k, d), NodeSize.x, j, k, d);
-            set(neighbor[XR]->get(1, j, k, d), NodeSize.x + 1, j, k, d);
-            set(neighbor[XR]->get(2, j, k, d), NodeSize.x + 2, j, k, d);
+            set(neighbor[GRID::XR]->get(0, j, k, d), NodeSize.x, j, k, d);
+            set(neighbor[GRID::XR]->get(1, j, k, d), NodeSize.x + 1, j, k, d);
+            set(neighbor[GRID::XR]->get(2, j, k, d), NodeSize.x + 2, j, k, d);
         }
     }
 }

@@ -32,42 +32,12 @@ variable::variable(Idim3 _NodeSize, Idim3 _GridSize, Idim3 _id, int _gid, int _d
 
     size = oNodeSize.x * oNodeSize.y * oNodeSize.z * sizeof(double);
 
-    if (spatial_dim == 1) {
-        X = 0;
-        Y = -1;
-        Z = -1;
-        XX = 0;
-        YY = -1;
-        ZZ = -1;
-        XY = -1;
-        XZ = -1;
-        YZ = -1;
-        CURV = -1;
-    } else if (spatial_dim == 2) {
-        X = 0;
-        Y = 1;
-        XX = 0;
-        YY = 1;
-        XY = 2;
-        CURV = 3;
-        Z = -1;
-        ZZ = -1;
-        XZ = -1;
-        YZ = -1;
-    } else {
-        X = 0;
-        Y = 1;
-        Z = 2;
-        XX = 0;
-        YY = 1;
-        ZZ = 2;
-        XY = 3;
-        XZ = 4;
-        YZ = 5;
-        CURV = 6;
-    }
-
     derivative_level = _derivative_level;
+
+    /*
+     *   f = {f1, f2, f3 ..., fn }
+     *   df = { {df1/dx, df1/dy, df1/dz}, {df2/dx, df2/dy, df2/dz}, ..., {dfn/dx, dfn/dy, dfn/dz} }
+     */
 
     f = (data **) malloc(dim * sizeof(data *));
     for (int i = 0; i < dim; i++) f[i] = new data(NodeSize, GridSize, id, gid, 1, pinned);
@@ -75,16 +45,18 @@ variable::variable(Idim3 _NodeSize, Idim3 _GridSize, Idim3 _id, int _gid, int _d
     if (derivative_level > 0) {
         df = (data **) malloc(dim * sizeof(data *));
         for (int i = 0; i < dim; i++) {
-            df[i] = new data(NodeSize, GridSize, id, gid, spatial_dim, pinned);
+            df[i] = new data(NodeSize, GridSize, id, gid, 3, pinned);
         }
     }
 
     if (derivative_level > 1) {
         ddf = (data **) malloc(dim * sizeof(data *));
         for (int i = 0; i < dim; i++) {
-            ddf[i] = new data(NodeSize, GridSize, id, gid, 1 + 3 * (spatial_dim - 1), pinned);
+            ddf[i] = new data(NodeSize, GridSize, id, gid, 7, pinned);
         }
     }
+
+    ccd_solver = new ccd(NodeSize, gid, grid);
 
 }
 
@@ -175,82 +147,150 @@ void variable::LinkNeighbor(variable *_r, variable *_l, variable *_u, variable *
 
 }
 
-void variable::get_derivative_SEC(int level) {
+void variable::get_derivative_SEC(int level, int d, int direction) {
 
     assert(level <= derivative_level && level > 0);
+    assert(d < dim);
+    assert(direction < spatial_dim);
 
     if (level == 1) {
-        for (int d = 0; d < dim; d++) {
-            for (int k = 0; k < NodeSize.z; k++) {
-                for (int j = 0; j < NodeSize.y; j++) {
-                    for (int i = 0; i < NodeSize.x; i++) {
-                        double val = 0.5 * (f[d]->get(i + 1, j, k, 0) - f[d]->get(i - 1, j, k, 0)) / grid->dx;
-                        df[d]->set(val, i, j, k, X);
+
+        switch (direction) {
+            case 0:
+                for (int k = 0; k < NodeSize.z; k++) {
+                    for (int j = 0; j < NodeSize.y; j++) {
+                        for (int i = 0; i < NodeSize.x; i++) {
+                            double val = 0.5 * (f[d]->get(i + 1, j, k, 0) - f[d]->get(i - 1, j, k, 0)) / grid->dx;
+                            df[d]->set(val, i, j, k, DIM::X);
+                        }
                     }
                 }
-            }
-        }
-        if (spatial_dim > 1) {
-            for (int d = 0; d < dim; d++) {
+                break;
+
+            case 1:
                 for (int k = 0; k < NodeSize.z; k++) {
                     for (int j = 0; j < NodeSize.y; j++) {
                         for (int i = 0; i < NodeSize.x; i++) {
                             double val = 0.5 * (f[d]->get(i, j + 1, k, 0) - f[d]->get(i, j - 1, k, 0)) / grid->dy;
-                            df[d]->set(val, i, j, k, Y);
+                            df[d]->set(val, i, j, k, DIM::Y);
                         }
                     }
                 }
-            }
-        }
-        if (spatial_dim > 2) {
-            for (int d = 0; d < dim; d++) {
+                break;
+
+            case 2:
                 for (int k = 0; k < NodeSize.z; k++) {
                     for (int j = 0; j < NodeSize.y; j++) {
                         for (int i = 0; i < NodeSize.x; i++) {
                             double val = 0.5 * (f[d]->get(i, j, k + 1, 0) - f[d]->get(i, j, k - 1, 0)) / grid->dz;
-                            df[d]->set(val, i, j, k, Z);
+                            df[d]->set(val, i, j, k, DIM::Z);
                         }
                     }
                 }
-            }
+                break;
         }
+
     } else if (level == 2) {
-        for (int d = 0; d < dim; d++) {
-            for (int k = 0; k < NodeSize.z; k++) {
-                for (int j = 0; j < NodeSize.y; j++) {
-                    for (int i = 0; i < NodeSize.x; i++) {
-                        double val = (f[d]->get(i + 1, j, k, 0) - 2.0 * f[d]->get(i, j, k, 0) +
-                                      f[d]->get(i - 1, j, k, 0)) / grid->dx / grid->dx;
-                        ddf[d]->set(val, i, j, k, XX);
+
+        switch (direction) {
+
+            case 0:
+                for (int k = 0; k < NodeSize.z; k++) {
+                    for (int j = 0; j < NodeSize.y; j++) {
+                        for (int i = 0; i < NodeSize.x; i++) {
+                            double val = (f[d]->get(i + 1, j, k, 0) - 2.0 * f[d]->get(i, j, k, 0) +
+                                          f[d]->get(i - 1, j, k, 0)) / grid->dx / grid->dx;
+                            ddf[d]->set(val, i, j, k, DIM::XX);
+                        }
                     }
                 }
-            }
-        }
-        if (spatial_dim > 1) {
-            for (int d = 0; d < dim; d++) {
+                break;
+
+            case 1:
                 for (int k = 0; k < NodeSize.z; k++) {
                     for (int j = 0; j < NodeSize.y; j++) {
                         for (int i = 0; i < NodeSize.x; i++) {
                             double val = (f[d]->get(i, j + 1, k, 0) - 2.0 * f[d]->get(i, j, k, 0) +
                                           f[d]->get(i, j - 1, k, 0)) / grid->dy / grid->dy;
-                            ddf[d]->set(val, i, j, k, YY);
+                            ddf[d]->set(val, i, j, k, DIM::YY);
                         }
                     }
                 }
-            }
-        }
-        if (spatial_dim > 2) {
-            for (int d = 0; d < dim; d++) {
+                break;
+
+            case 2:
                 for (int k = 0; k < NodeSize.z; k++) {
                     for (int j = 0; j < NodeSize.y; j++) {
                         for (int i = 0; i < NodeSize.x; i++) {
                             double val = (f[d]->get(i, j, k + 1, 0) - 2.0 * f[d]->get(i, j, k, 0) +
                                           f[d]->get(i, j, k - 1, 0)) / grid->dz / grid->dz;
-                            ddf[d]->set(val, i, j, k, ZZ);
+                            ddf[d]->set(val, i, j, k, DIM::ZZ);
                         }
                     }
                 }
-            }
+                break;
         }
+
     }
+}
+
+void variable::get_derivative_CCD(int d, int direction) {
+
+    assert(d < dim);
+    assert(direction < spatial_dim);
+
+    double bda1 = -3.5;
+    double bdb1 = 4.0;
+    double bdc1 = -0.5;
+    double bda2 = 9.0;
+    double bdb2 = -12.0;
+    double bdc2 = 3.0;
+
+    switch (direction) {
+        case DIM::X:
+            for (int k = 0; k < NodeSize.z; k++) {
+                for (int j = 0; j < NodeSize.y; j++) {
+
+                    for (int i = -2; i < NodeSize.x + 2; i++) {
+                        double s = 15.0 / 16.0 * (f[d]->get(i + 1, j, k, 0) - f[d]->get(i - 1, j, k, 0)) / grid->dx;
+                        double ss = (3.0 * f[d]->get(i - 1, j, k, 0) - 6.0 * f[d]->get(i, j, k, 0) +
+                                     3.0 * f[d]->get(i + 1, j, k, 0)) / grid->dx / grid->dx;
+                        ccd_solver->S[CCD::CENTER][DIM::X][i + 3] = s;
+                        ccd_solver->SS[CCD::CENTER][DIM::X][i + 3] = ss;
+                    }
+
+                    double s, ss;
+
+                    s = (bda1 * f[d]->get(-3, j, k, 0) + bdb1 * f[d]->get(-2, j, k, 0) +
+                         bdc1 * f[d]->get(-1, j, k, 0)) / grid->dx;
+                    ss = (bda2 * f[d]->get(-3, j, k, 0) + bdb2 * f[d]->get(-2, j, k, 0) +
+                          bdc2 * f[d]->get(-1, j, k, 0)) / grid->dx / grid->dx;
+
+                    ccd_solver->S[CCD::CENTER][DIM::X][0] = s;
+                    ccd_solver->SS[CCD::CENTER][DIM::X][0] = ss;
+
+                    s = -(bda1 * f[d]->get(NodeSize.x + 2, j, k, 0) + bdb1 * f[d]->get(NodeSize.x + 1, j, k, 0) +
+                          bdc1 * f[d]->get(NodeSize.x, j, k, 0)) / grid->dx;
+                    ss = (bda2 * f[d]->get(NodeSize.x + 2, j, k, 0) + bdb2 * f[d]->get(NodeSize.x + 1, j, k, 0) +
+                          bdc2 * f[d]->get(NodeSize.x, j, k, 0)) / grid->dx / grid->dx;
+
+                    ccd_solver->S[CCD::CENTER][DIM::X][NodeSize.x + 5] = s;
+                    ccd_solver->SS[CCD::CENTER][DIM::X][NodeSize.x + 5] = ss;
+
+                    twin_bks(ccd_solver->A[CCD::CENTER][DIM::X], ccd_solver->B[CCD::CENTER][DIM::X],
+                             ccd_solver->AA[CCD::CENTER][DIM::X], ccd_solver->BB[CCD::CENTER][DIM::X],
+                             ccd_solver->S[CCD::CENTER][DIM::X], ccd_solver->SS[CCD::CENTER][DIM::X],
+                             ccd_solver->Nodesize[DIM::X]);
+
+                    for (int i = 0; i < NodeSize.x + 6; i++) {
+                        df[d]->set(ccd_solver->S[CCD::CENTER][DIM::X][i], i - 3, j, k, DIM::X);
+                        if (derivative_level > 1) {
+                            ddf[d]->set(ccd_solver->SS[CCD::CENTER][DIM::X][i], i - 3, j, k, DIM::XX);
+                        }
+                    }
+
+                }
+            }
+    }
+
 }
