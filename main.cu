@@ -2,11 +2,14 @@
 #include "src/variable.cuh"
 #include "src/grids.cuh"
 #include <cmath>
+#include <omp.h>
 
 int main() {
 
     double oerr1 = 0.0;
     double oerr2 = 0.0;
+
+    std::cout << omp_get_max_threads() << std::endl;
 
     for (int n = 0; n < 5; n++) {
 

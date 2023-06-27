@@ -1,17 +1,60 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required ( VERSION 3.20 )
 
-project(cuhpc CUDA)
+project ( cuhpc LANGUAGES CXX CUDA )
 
-set(CMAKE_CUDA_ARCHITECTURES 75)
-set(CMAKE_CUDA_STANDARD 17)
+if (NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release)
+endif()
+message(STATUS "Build directory: ${PROJECT_BINARY_DIR}")
+message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 
-file(GLOB SOURCES "src/*.h" "src/*.cpp" "src/*.cuh" "src/*.cu")
+set ( PRJ_COMPILE_FEATURES )
+set ( PRJ_LIBRARIES )
+set ( PRJ_INCLUDE_DIRS )
 
-add_executable(cuhpc
+list ( APPEND PRJ_COMPILE_FEATURES cxx_std_20 )
+
+find_package ( CUDAToolkit )
+#message ( STATUS  "CUDAToolkit_FOUND=${CUDAToolkit_FOUND}" )
+if ( CUDAToolkit_FOUND )
+    enable_language( CUDA )
+    set ( CMAKE_CUDA_STANDARD 20 )
+    set ( CMAKE_CUDA_ARCHITECTURES "60;72;75" )
+endif ()
+message ( STATUS "CMAKE_CUDA_STANDARD=${CMAKE_CUDA_STANDARD}" )
+find_package ( OpenMP REQUIRED )
+#message ( STATUS  "OpenMP_FOUND=${OpenMP_FOUND}" )
+list ( APPEND PRJ_LIBRARIES OpenMP::OpenMP_CXX )
+
+set ( CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -Xcompiler=${OpenMP_CXX_FLAGS}" )
+
+file(GLOB SOURCES "src/*.cu")
+add_executable ( ${PROJECT_NAME}
         ${SOURCES}
         main.cu
         )
 
-set_target_properties(cuhpc PROPERTIES
-        CUDA_SEPARABLE_COMPILATION ON)
+set_target_properties( ${PROJECT_NAME}
+        PROPERTIES
+        POSITION_INDEPENDENT_CODE ON
+        )
 
+set_target_properties ( ${PROJECT_NAME}
+        PROPERTIES
+        CUDA_SEPARABLE_COMPILATION ON
+        )
+
+target_include_directories ( ${PROJECT_NAME}
+        PRIVATE
+        ${PRJ_INCLUDE_DIRS}
+        )
+
+target_link_libraries( ${PROJECT_NAME}
+        PRIVATE
+        ${PRJ_LIBRARIES}
+        )
+
+target_compile_features ( ${PROJECT_NAME}
+        PRIVATE
+        ${PRJ_COMPILE_FEATURES}
+        )
