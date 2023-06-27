@@ -11,14 +11,6 @@
 #ifndef CUHPC_DATA_CUH
 #define CUHPC_DATA_CUH
 
-struct Idim3 {
-    int x, y, z;
-
-    Idim3() : x(1), y(1), z(1) {};
-
-    Idim3(int i, int j, int k) : x(i), y(j), z(k) {};
-};
-
 class data {
 
 private:

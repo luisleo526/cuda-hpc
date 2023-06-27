@@ -238,6 +238,7 @@ void variable::get_derivative_CCD(int d, int direction) {
 
     assert(d < dim);
     assert(direction < spatial_dim);
+    assert(derivative_level > 0);
 
     double bda1 = -3.5;
     double bdb1 = 4.0;
@@ -288,9 +289,55 @@ void variable::get_derivative_CCD(int d, int direction) {
                             ddf[d]->set(ccd_solver->SS[CCD::CENTER][DIM::X][i], i - 3, j, k, DIM::XX);
                         }
                     }
-
                 }
             }
+            break;
+        case DIM::Y:
+            for (int k = 0; k < NodeSize.z; k++) {
+                for (int i = 0; i < NodeSize.x; i++) {
+
+                    for (int j = 0; j < NodeSize.y; j++) {
+                        double s = 15.0 / 16.0 * (f[d]->get(i, j + 1, k, 0) - f[d]->get(i, j - 1, k, 0)) / grid->dy;
+                        double ss = (3.0 * f[d]->get(i, j - 1, k, 0) - 6.0 * f[d]->get(i, j, k, 0) +
+                                     3.0 * f[d]->get(i, j + 1, k, 0)) / grid->dy / grid->dy;
+                        ccd_solver->S[CCD::CENTER][DIM::Y][j + 3] = s;
+                        ccd_solver->SS[CCD::CENTER][DIM::Y][j + 3] = ss;
+                    }
+
+                    double s, ss;
+
+                    s = (bda1 * f[d]->get(i, -3, k, 0) + bdb1 * f[d]->get(i, -2, k, 0) +
+                         bdc1 * f[d]->get(i, -1, k, 0)) / grid->dy;
+                    ss = (bda2 * f[d]->get(i, -3, k, 0) + bdb2 * f[d]->get(i, -2, k, 0) +
+                          bdc2 * f[d]->get(i, -1, k, 0)) / grid->dy / grid->dy;
+
+                    ccd_solver->S[CCD::CENTER][DIM::Y][0] = s;
+                    ccd_solver->SS[CCD::CENTER][DIM::Y][0] = ss;
+
+                    s = -(bda1 * f[d]->get(i, NodeSize.y + 2, k, 0) + bdb1 * f[d]->get(i, NodeSize.y + 1, k, 0) +
+                          bdc1 * f[d]->get(i, NodeSize.y, k, 0)) / grid->dy;
+                    ss = (bda2 * f[d]->get(i, NodeSize.y + 2, k, 0) + bdb2 * f[d]->get(i, NodeSize.y + 1, k, 0) +
+                            bdc2 * f[d]->get(i, NodeSize.y, k, 0)) / grid->dy / grid->dy;
+
+                    ccd_solver->S[CCD::CENTER][DIM::Y][NodeSize.y + 5] = s;
+                    ccd_solver->SS[CCD::CENTER][DIM::Y][NodeSize.y + 5] = ss;
+
+                    twin_bks(ccd_solver->A[CCD::CENTER][DIM::Y], ccd_solver->B[CCD::CENTER][DIM::Y],
+                             ccd_solver->AA[CCD::CENTER][DIM::Y], ccd_solver->BB[CCD::CENTER][DIM::Y],
+                             ccd_solver->S[CCD::CENTER][DIM::Y], ccd_solver->SS[CCD::CENTER][DIM::Y],
+                             ccd_solver->Nodesize[DIM::Y]);
+
+                    for (int j = 0; j < NodeSize.y + 6; j++) {
+                        df[d]->set(ccd_solver->S[CCD::CENTER][DIM::Y][j], i, j - 3, k, DIM::Y);
+                        if (derivative_level > 1) {
+                            ddf[d]->set(ccd_solver->SS[CCD::CENTER][DIM::Y][j], i, j - 3, k, DIM::YY);
+                        }
+                    }
+                }
+            }
+            break;
+        case DIM::Z:
+
     }
 
 }

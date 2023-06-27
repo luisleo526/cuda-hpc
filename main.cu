@@ -14,8 +14,8 @@ int main() {
 
     for (int n = 0; n < 10; n++) {
 
-//        Idim3 NodeSize(4 * (int) pow(2, n), 1, 1);
-        Idim3 NodeSize(256, 1, 1);
+        Idim3 NodeSize(4 * (int) pow(2, n), 1, 1);
+//        Idim3 NodeSize(256, 1, 1);
         Idim3 GridSize(1, 1, 1);
         Idim3 id(0, 0, 0);
 
@@ -25,19 +25,19 @@ int main() {
         grid.ToDevice();
 
         variable phi(NodeSize, GridSize, id, 0, 1, true, 2, &grid);
-        phi.f[0]->LinkNeighbor();
-        phi.f[0]->assign_bc(0, BC::INFO(BC::CELL_CENTER_PERIODIC), BC::INFO(BC::CELL_CENTER_PERIODIC));
+        phi.f[VAR::SCALAR]->LinkNeighbor();
+        phi.f[VAR::SCALAR]->assign_bc(0, BC::INFO(BC::CELL_CENTER_PERIODIC), BC::INFO(BC::CELL_CENTER_PERIODIC));
 
         for (int i = 0; i < phi.NodeSize.x; i++) {
             phi.f[0]->set(cos(std::numbers::pi * grid.get(i, 0, 0, 0)), i, 0, 0, 0);
         }
-        phi.f[0]->apply_bc_x(0);
-        phi.f[0]->ToDevice();
+        phi.f[VAR::SCALAR]->apply_bc_x(0);
+        phi.f[VAR::SCALAR]->ToDevice();
 
-//        phi.get_derivative_SEC(1, 0, DIM::X);
-//        phi.get_derivative_SEC(2, 0, DIM::XX);
+//        phi.get_derivative_SEC(1, VAR::SCALAR, DIM::X);
+//        phi.get_derivative_SEC(2, VAR::SCALAR, DIM::XX);
 
-        phi.get_derivative_CCD(0, DIM::X);
+        phi.get_derivative_CCD(VAR::SCALAR, DIM::X);
 
         double err1, err2;
         err1 = 0.0;

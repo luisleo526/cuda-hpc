@@ -46,6 +46,14 @@ struct DOMAIN_INFO {
                                                                                     zl(zl), zr(zr) {}
 };
 
+struct Idim3 {
+    int x, y, z;
+
+    Idim3() : x(1), y(1), z(1) {};
+
+    Idim3(int i, int j, int k) : x(i), y(j), z(k) {};
+};
+
 void twin_dec(double **a, double **b, double **aa, double **bb, int n);
 
 void twin_bks(double **a, double **b, double **aa, double **bb, double *s, double *ss, int n);

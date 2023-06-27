@@ -5,6 +5,13 @@
 #ifndef CUHPC_CONSTANTS_CUH
 #define CUHPC_CONSTANTS_CUH
 
+namespace VAR {
+    const int U = 0;
+    const int V = 0;
+    const int W = 0;
+    const int SCALAR = 0;
+}
+
 namespace CCD {
     const int UPWIND = 0;
     const int DOWNWIND = 1;

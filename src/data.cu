@@ -103,6 +103,8 @@ void data::LinkNeighbor() {
 }
 
 void data::LinkNeighbor(data *_r, data *_l) {
+    assert((id.x < GridSize.x - 1 && _r->id.x == id.x + 1) || _r->id.x == id.x);
+    assert((id.x > 0 && _l->id.x == id.x - 1) || _l->id.x == id.x);
     neighbor[GRID::XL] = _l;
     neighbor[GRID::XR] = _r;
     neighbor[GRID::YL] = this;
@@ -112,6 +114,10 @@ void data::LinkNeighbor(data *_r, data *_l) {
 }
 
 void data::LinkNeighbor(data *_r, data *_l, data *_u, data *_d) {
+    assert( (id.x < GridSize.x - 1 && _r->id.x == id.x + 1) || _r->id.x == id.x);
+    assert( (id.x > 0 && _l->id.x == id.x - 1) || _l->id.x == id.x);
+    assert( (id.y < GridSize.y - 1 && _u->id.y == id.y + 1) || _u->id.y == id.y);
+    assert( (id.y > 0 && _d->id.y == id.y - 1) || _d->id.y == id.y);
     neighbor[GRID::XL] = _l;
     neighbor[GRID::XR] = _r;
     neighbor[GRID::YL] = _d;
