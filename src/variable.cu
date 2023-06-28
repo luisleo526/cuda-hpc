@@ -332,9 +332,16 @@ void variable::assign_CCD_source(int d, int direction, int type, int I, int J, i
     switch (direction) {
         case DIM::X:
             for (int i = -2; i < NodeSize.x + 2; i++) {
-                s = 15.0 / 16.0 * (f[d]->get(i + 1, J, K, 0) - f[d]->get(i - 1, J, K, 0)) / grid->dx;
-                ss = (3.0 * f[d]->get(i - 1, J, K, 0) - 6.0 * f[d]->get(i, J, K, 0) +
-                      3.0 * f[d]->get(i + 1, J, K, 0)) / grid->dx / grid->dx;
+
+                s = 0.0;
+                ss = 0.0;
+                for (int dig = 0; dig < 3; dig++) {
+                    s += CCD::PARAM1[type][dig] * f[d]->get(i + dig - 1, J, K, 0);
+                    ss += CCD::PARAM2[type][dig] * f[d]->get(i + dig - 1, J, K, 0);
+                }
+                s = s / grid->dx;
+                ss = ss / grid->dx / grid->dx;
+
                 ccd_solver->S[CCD::CENTER][DIM::X][i + 3] = s;
                 ccd_solver->SS[CCD::CENTER][DIM::X][i + 3] = ss;
             }
@@ -359,9 +366,16 @@ void variable::assign_CCD_source(int d, int direction, int type, int I, int J, i
             break;
         case DIM::Y:
             for (int j = 0; j < NodeSize.y; j++) {
-                s = 15.0 / 16.0 * (f[d]->get(I, j + 1, K, 0) - f[d]->get(I, j - 1, K, 0)) / grid->dy;
-                ss = (3.0 * f[d]->get(I, j - 1, K, 0) - 6.0 * f[d]->get(I, j, K, 0) +
-                      3.0 * f[d]->get(I, j + 1, K, 0)) / grid->dy / grid->dy;
+
+                s = 0.0;
+                ss = 0.0;
+                for (int dig = 0; dig < 3; dig++) {
+                    s += CCD::PARAM1[type][dig] * f[d]->get(I, j + dig - 1, K, 0);
+                    ss += CCD::PARAM2[type][dig] * f[d]->get(I, j + dig - 1, K, 0);
+                }
+                s = s / grid->dx;
+                ss = ss / grid->dx / grid->dx;
+
                 ccd_solver->S[CCD::CENTER][DIM::Y][j + 3] = s;
                 ccd_solver->SS[CCD::CENTER][DIM::Y][j + 3] = ss;
             }
@@ -387,9 +401,16 @@ void variable::assign_CCD_source(int d, int direction, int type, int I, int J, i
 
         case DIM::Z:
             for (int k = 0; k < NodeSize.z; k++) {
-                s = 15.0 / 16.0 * (f[d]->get(I, J, k + 1, 0) - f[d]->get(I, J, k - 1, 0)) / grid->dz;
-                ss = (3.0 * f[d]->get(I, J, k - 1, 0) - 6.0 * f[d]->get(I, J, k, 0) +
-                      3.0 * f[d]->get(I, J, k + 1, 0)) / grid->dz / grid->dz;
+
+                s = 0.0;
+                ss = 0.0;
+                for (int dig = 0; dig < 3; dig++) {
+                    s += CCD::PARAM1[type][dig] * f[d]->get(I, J, k + dig - 1, 0);
+                    ss += CCD::PARAM2[type][dig] * f[d]->get(I, J, k + dig - 1, 0);
+                }
+                s = s / grid->dx;
+                ss = ss / grid->dx / grid->dx;
+
                 ccd_solver->S[CCD::CENTER][DIM::Z][k + 3] = s;
                 ccd_solver->SS[CCD::CENTER][DIM::Z][k + 3] = ss;
             }

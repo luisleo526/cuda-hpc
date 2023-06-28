@@ -24,7 +24,12 @@ namespace CCD {
     const int UPWIND = 0;
     const int DOWNWIND = 1;
     const int CENTER = 2;
-    const double CENTER_PARAM[3][3] = {-15.0 / 16.0, 0.0, 15.0 / 16.0};
+    const double PARAM1[3][3] = {{-15.0 / 16.0, 0.0, 15.0 / 16.0},
+                                 {-15.0 / 16.0, 0.0, 15.0 / 16.0},
+                                 {-15.0 / 16.0, 0.0, 15.0 / 16.0}};
+    const double PARAM2[3][3] = {{3.0, -6.0, 3.0},
+                                 {3.0, -6.0, 3.0},
+                                 {3.0, -6.0, 3.0}};
 }
 
 namespace DIM {
