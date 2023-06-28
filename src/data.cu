@@ -47,6 +47,16 @@ data::data(Idim3 _NodeSize, Idim3 _GridSize, Idim3 _id, int _gid, int _dim, bool
     cudaMalloc((void **) &device, dim * size);
     cudaCheckErrors("cudaMalloc failed");
 
+    BC::INFO buffer;
+    for (int d = 0; d < dim; d++) {
+        bc_type[d][GRID::XL] = buffer;
+        bc_type[d][GRID::XR] = buffer;
+        bc_type[d][GRID::YL] = buffer;
+        bc_type[d][GRID::YR] = buffer;
+        bc_type[d][GRID::ZL] = buffer;
+        bc_type[d][GRID::ZR] = buffer;
+    }
+
 }
 
 void data::ToDevice() {
@@ -114,10 +124,10 @@ void data::LinkNeighbor(data *_r, data *_l) {
 }
 
 void data::LinkNeighbor(data *_r, data *_l, data *_u, data *_d) {
-    assert( (id.x < GridSize.x - 1 && _r->id.x == id.x + 1) || _r->id.x == id.x);
-    assert( (id.x > 0 && _l->id.x == id.x - 1) || _l->id.x == id.x);
-    assert( (id.y < GridSize.y - 1 && _u->id.y == id.y + 1) || _u->id.y == id.y);
-    assert( (id.y > 0 && _d->id.y == id.y - 1) || _d->id.y == id.y);
+    assert((id.x < GridSize.x - 1 && _r->id.x == id.x + 1) || _r->id.x == id.x);
+    assert((id.x > 0 && _l->id.x == id.x - 1) || _l->id.x == id.x);
+    assert((id.y < GridSize.y - 1 && _u->id.y == id.y + 1) || _u->id.y == id.y);
+    assert((id.y > 0 && _d->id.y == id.y - 1) || _d->id.y == id.y);
     neighbor[GRID::XL] = _l;
     neighbor[GRID::XR] = _r;
     neighbor[GRID::YL] = _d;

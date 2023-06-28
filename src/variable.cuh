@@ -18,7 +18,7 @@ public:
     int size;
     Idim3 NodeSize, GridSize, id;
     int gid, dim, spatial_dim;
-    data **f, **df, **ddf;
+    data **f, **df, **ddf, **flux;
     grids *grid;
     ccd *ccd_solver;
     variable(Idim3 _NodeSize, Idim3 _GridSize, Idim3 _id, int _gid, int _dim, bool pinned, int _derivative_level, grids *_grid);
@@ -28,7 +28,10 @@ public:
     void LinkNeighbor(variable *_r, variable *_l, variable *_u, variable *_d);
     void LinkNeighbor(variable *_r, variable *_l, variable *_u, variable *_d, variable *_f, variable *_b);
     void get_derivative_SEC(int level, int d, int direction);
+
+    void assign_CCD_source(int d, int direction, int type, int I, int J, int K);
     void get_derivative_CCD(int d, int direction);
+
 };
 
 

@@ -19,12 +19,12 @@ int main() {
         Idim3 GridSize(1, 1, 1);
         Idim3 id(0, 0, 0);
 
-        grids grid(NodeSize, GridSize, id, 0, true, DOMAIN_INFO(-1.0, 1.0), true);
+        grids grid(NodeSize, GridSize, id, 0, CUDA::PINNED_MEM, DOMAIN_INFO(-1.0, 1.0), true);
         grid.LinkNeighbor();
         grid.apply_bc_x(0);
         grid.ToDevice();
 
-        variable phi(NodeSize, GridSize, id, 0, 1, true, 2, &grid);
+        variable phi(NodeSize, GridSize, id, 0, 1, CUDA::PINNED_MEM, VAR::W_SECOND_DERI, &grid);
         phi.f[VAR::SCALAR]->LinkNeighbor();
         phi.f[VAR::SCALAR]->assign_bc(0, BC::INFO(BC::CELL_CENTER_PERIODIC), BC::INFO(BC::CELL_CENTER_PERIODIC));
 
