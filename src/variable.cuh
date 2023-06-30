@@ -27,10 +27,11 @@ public:
     void LinkNeighbor(variable *_r, variable *_l);
     void LinkNeighbor(variable *_r, variable *_l, variable *_u, variable *_d);
     void LinkNeighbor(variable *_r, variable *_l, variable *_u, variable *_d, variable *_f, variable *_b);
-    void get_derivative_SEC(int level, int d, int direction);
 
+    void get_derivative_SEC(int level, int d, int direction);
     void assign_CCD_source(int d, int direction, int type, int I, int J, int K);
     void get_derivative_CCD(int d, int direction);
+    void get_derivative_UCCD(int d, int direction, variable *vel);
 
 };
 

@@ -266,6 +266,7 @@ void variable::get_derivative_CCD(int d, int direction) {
                 }
             }
             break;
+
         case DIM::Y:
             for (int k = 0; k < NodeSize.z; k++) {
                 for (int i = 0; i < NodeSize.x; i++) {
@@ -357,6 +358,7 @@ void variable::assign_CCD_source(int d, int direction, int type, int I, int J, i
             ccd_solver->SS[type][DIM::X][NodeSize.x + 5] = ss;
 
             break;
+
         case DIM::Y:
             for (int j = 0; j < NodeSize.y; j++) {
 
@@ -428,4 +430,124 @@ void variable::assign_CCD_source(int d, int direction, int type, int I, int J, i
             break;
 
     }
+}
+
+void variable::get_derivative_UCCD(int d, int direction, variable *vel) {
+
+    assert(d < dim);
+    assert(direction < spatial_dim && direction < vel->spatial_dim);
+    assert(derivative_level > 0);
+
+    switch (direction) {
+        case DIM::X:
+
+            for (int k = 0; k < NodeSize.z; k++) {
+                for (int j = 0; j < NodeSize.y; j++) {
+
+                    assign_CCD_source(d, DIM::X, CCD::UPWIND, INT_MIN, j, k);
+                    assign_CCD_source(d, DIM::X, CCD::DOWNWIND, INT_MIN, j, k);
+
+                    twin_bks(ccd_solver->A[CCD::UPWIND][DIM::X], ccd_solver->B[CCD::UPWIND][DIM::X],
+                             ccd_solver->AA[CCD::UPWIND][DIM::X], ccd_solver->BB[CCD::UPWIND][DIM::X],
+                             ccd_solver->S[CCD::UPWIND][DIM::X], ccd_solver->SS[CCD::UPWIND][DIM::X],
+                             ccd_solver->Nodesize[DIM::X]);
+
+                    twin_bks(ccd_solver->A[CCD::DOWNWIND][DIM::X], ccd_solver->B[CCD::DOWNWIND][DIM::X],
+                             ccd_solver->AA[CCD::DOWNWIND][DIM::X], ccd_solver->BB[CCD::DOWNWIND][DIM::X],
+                             ccd_solver->S[CCD::DOWNWIND][DIM::X], ccd_solver->SS[CCD::DOWNWIND][DIM::X],
+                             ccd_solver->Nodesize[DIM::X]);
+
+                    for (int i = 0; i < NodeSize.x + 6; i++) {
+
+                        if (vel->f[VAR::U]->get(i, j, k, 0) > 0.0) {
+                            df[d]->set(ccd_solver->S[CCD::UPWIND][DIM::X][i], i - 3, j, k, DIM::X);
+                        } else {
+                            df[d]->set(ccd_solver->S[CCD::DOWNWIND][DIM::X][i], i - 3, j, k, DIM::X);
+                        }
+
+                        if (derivative_level > 1) {
+                            auto val = (ccd_solver->SS[CCD::UPWIND][DIM::X][i] +
+                                        ccd_solver->SS[CCD::DOWNWIND][DIM::X][i]) / 2.0;
+                            ddf[d]->set(val, i - 3, j, k, DIM::XX);
+                        }
+                    }
+                }
+            }
+            break;
+
+        case DIM::Y:
+            for (int k = 0; k < NodeSize.z; k++) {
+                for (int i = 0; i < NodeSize.x; i++) {
+                    assign_CCD_source(d, DIM::Y, CCD::UPWIND, i, INT_MIN, k);
+                    assign_CCD_source(d, DIM::Y, CCD::DOWNWIND, i, INT_MIN, k);
+
+                    twin_bks(ccd_solver->A[CCD::UPWIND][DIM::Y], ccd_solver->B[CCD::UPWIND][DIM::Y],
+                             ccd_solver->AA[CCD::UPWIND][DIM::Y], ccd_solver->BB[CCD::UPWIND][DIM::Y],
+                             ccd_solver->S[CCD::UPWIND][DIM::Y], ccd_solver->SS[CCD::UPWIND][DIM::Y],
+                             ccd_solver->Nodesize[DIM::Y]);
+
+                    twin_bks(ccd_solver->A[CCD::DOWNWIND][DIM::Y], ccd_solver->B[CCD::DOWNWIND][DIM::Y],
+                             ccd_solver->AA[CCD::DOWNWIND][DIM::Y], ccd_solver->BB[CCD::DOWNWIND][DIM::Y],
+                             ccd_solver->S[CCD::DOWNWIND][DIM::Y], ccd_solver->SS[CCD::DOWNWIND][DIM::Y],
+                             ccd_solver->Nodesize[DIM::Y]);
+
+                    for (int j = 0; j < NodeSize.y + 6; j++) {
+
+                        if (vel->f[VAR::V]->get(i, j, k, 0) > 0.0) {
+                            df[d]->set(ccd_solver->S[CCD::UPWIND][DIM::Y][j], i, j - 3, k, DIM::Y);
+                        } else {
+                            df[d]->set(ccd_solver->S[CCD::DOWNWIND][DIM::Y][j], i, j - 3, k, DIM::Y);
+                        }
+
+                        if (derivative_level > 1) {
+                            auto val = (ccd_solver->SS[CCD::UPWIND][DIM::Y][j] +
+                                        ccd_solver->SS[CCD::DOWNWIND][DIM::Y][j]) / 2.0;
+                            ddf[d]->set(val, i, j - 3, k, DIM::YY);
+                        }
+
+                    }
+                }
+            }
+            break;
+
+        case DIM::Z:
+
+            for (int j = 0; j < NodeSize.y; j++) {
+                for (int i = 0; i < NodeSize.x; i++) {
+
+                    assign_CCD_source(d, DIM::Z, CCD::UPWIND, i, j, INT_MIN);
+                    assign_CCD_source(d, DIM::Z, CCD::DOWNWIND, i, j, INT_MIN);
+
+                    twin_bks(ccd_solver->A[CCD::UPWIND][DIM::Z], ccd_solver->B[CCD::UPWIND][DIM::Z],
+                             ccd_solver->AA[CCD::UPWIND][DIM::Z], ccd_solver->BB[CCD::UPWIND][DIM::Z],
+                             ccd_solver->S[CCD::UPWIND][DIM::Z], ccd_solver->SS[CCD::UPWIND][DIM::Z],
+                             ccd_solver->Nodesize[DIM::Z]);
+
+                    twin_bks(ccd_solver->A[CCD::DOWNWIND][DIM::Z], ccd_solver->B[CCD::DOWNWIND][DIM::Z],
+                             ccd_solver->AA[CCD::DOWNWIND][DIM::Z], ccd_solver->BB[CCD::DOWNWIND][DIM::Z],
+                             ccd_solver->S[CCD::DOWNWIND][DIM::Z], ccd_solver->SS[CCD::DOWNWIND][DIM::Z],
+                             ccd_solver->Nodesize[DIM::Z]);
+
+                    for (int k = 0; k < NodeSize.z + 6; k++) {
+
+                        if (vel->f[VAR::W]->get(i, j, k, 0) > 0.0) {
+                            df[d]->set(ccd_solver->S[CCD::UPWIND][DIM::Z][k], i, j, k - 3, DIM::Z);
+                        } else {
+                            df[d]->set(ccd_solver->S[CCD::DOWNWIND][DIM::Z][k], i, j, k - 3, DIM::Z);
+                        }
+
+                        if (derivative_level > 1) {
+                            auto val = (ccd_solver->SS[CCD::UPWIND][DIM::Z][k] +
+                                        ccd_solver->SS[CCD::DOWNWIND][DIM::Z][k]) / 2.0;
+                            ddf[d]->set(val, i, j, k - 3, DIM::ZZ);
+                        }
+
+                    }
+
+                }
+            }
+            break;
+
+    }
+
 }

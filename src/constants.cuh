@@ -12,8 +12,8 @@ namespace CUDA {
 
 namespace VAR {
     const int U = 0;
-    const int V = 0;
-    const int W = 0;
+    const int V = 1;
+    const int W = 2;
     const int SCALAR = 0;
     const int WO_DERI = 0;
     const int W_FIRST_DERI = 1;

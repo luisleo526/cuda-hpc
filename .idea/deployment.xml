@@ -2,13 +2,31 @@
 <project version="4">
   <component name="PublishConfigData" remoteFilesAllowedToDisappearOnAutoupload="false">
     <serverData>
-      <paths name="Remote Host (0b0e8a5e-f1e6-4168-a3e5-6906684343da)">
+      <paths name="Aemass (204d7c6a-8664-41b1-892e-3a7a88e51750)">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/tmp/tmp.4m6XYbGby3" local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="Home (0b0e8a5e-f1e6-4168-a3e5-6906684343da)">
         <serverdata>
           <mappings>
             <mapping deploy="/tmp/tmp.56DmBG6Fyz" local="$PROJECT_DIR$" />
           </mappings>
           <excludedPaths>
             <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug" />
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug-home" />
+          </excludedPaths>
+        </serverdata>
+      </paths>
+      <paths name="V100 (ca143cd7-9541-47b1-a31f-36bf5de8a17c)">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/tmp/tmp.BIn4liBDys" local="$PROJECT_DIR$" />
+          </mappings>
+          <excludedPaths>
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug-v100" />
           </excludedPaths>
         </serverdata>
       </paths>

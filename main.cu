@@ -29,7 +29,7 @@ int main() {
         phi.f[VAR::SCALAR]->assign_bc(0, BC::INFO(BC::CELL_CENTER_PERIODIC), BC::INFO(BC::CELL_CENTER_PERIODIC));
 
         for (int i = 0; i < phi.NodeSize.x; i++) {
-            phi.f[0]->set(cos(std::numbers::pi * grid.get(i, 0, 0, 0)), i, 0, 0, 0);
+            phi.f[VAR::SCALAR]->set(cos(std::numbers::pi * grid.get(i, 0, 0, 0)), i, 0, 0, 0);
         }
         phi.f[VAR::SCALAR]->apply_bc_x(0);
         phi.f[VAR::SCALAR]->ToDevice();
