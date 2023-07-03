@@ -46,10 +46,12 @@ public:
     void LinkNeighbor(data *_r, data *_l, data *_u, data *_d, data *_f, data *_b);
 
     void set(double val, int i, int j, int k, int d);
+    void set(double val, int i, int j, int k);
 
     int map_index(int i, int j, int k, int d);
 
     double get(int i, int j, int k, int d);
+    double get(int i, int j, int k);
 
     void assign_bc(int d, BC::INFO xr, BC::INFO xl);
     void assign_bc(int d, BC::INFO xr, BC::INFO xl, BC::INFO yr, BC::INFO yl);

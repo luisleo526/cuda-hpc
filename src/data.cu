@@ -99,8 +99,16 @@ void data::set(double val, int i, int j, int k, int d) {
     host[map_index(i, j, k, d)] = val;
 }
 
+void data::set(double val, int i, int j, int k) {
+    set(val, i, j, k, 0);
+}
+
 double data::get(int i, int j, int k, int d) {
     return host[map_index(i, j, k, d)];
+}
+
+double data::get(int i, int j, int k) {
+    return get(i, j, k, 0);
 }
 
 void data::LinkNeighbor() {

@@ -4,6 +4,7 @@
 #include <cmath>
 #include <omp.h>
 #include <numbers>
+#include "src/flux.cuh"
 
 int main() {
 
@@ -28,17 +29,25 @@ int main() {
         phi.f[VAR::SCALAR]->LinkNeighbor();
         phi.f[VAR::SCALAR]->assign_bc(0, BC::INFO(BC::CELL_CENTER_PERIODIC), BC::INFO(BC::CELL_CENTER_PERIODIC));
 
+        variable vel(NodeSize, GridSize, id, 0, 1, CUDA::PINNED_MEM, VAR::WO_DERI, &grid);
+        vel.f[VAR::U]->LinkNeighbor();
+        vel.f[VAR::U]->assign_bc(0, BC::INFO(BC::CELL_CENTER_PERIODIC), BC::INFO(BC::CELL_CENTER_PERIODIC));
+
         for (int i = 0; i < phi.NodeSize.x; i++) {
-            phi.f[VAR::SCALAR]->set(cos(std::numbers::pi * grid.get(i, 0, 0, 0)), i, 0, 0, 0);
+            phi.f[VAR::SCALAR]->set(cos(std::numbers::pi * grid.get(i, 0, 0)), i, 0, 0);
+            vel.f[VAR::U]->set(1.0, i, 0, 0);
         }
         phi.f[VAR::SCALAR]->apply_bc_x(0);
+        vel.f[VAR::U]->apply_bc_x(0);
         phi.f[VAR::SCALAR]->ToDevice();
+        vel.f[VAR::U]->ToDevice();
 
 //        phi.get_derivative_SEC(1, VAR::SCALAR, DIM::X);
 //        phi.get_derivative_SEC(2, VAR::SCALAR, DIM::XX);
 
 //        phi.get_derivative_CCD(VAR::SCALAR, DIM::X);
         phi.get_derivative_UCCD(VAR::SCALAR, DIM::X, &phi);
+
         double err1, err2;
         err1 = 0.0;
         err2 = 0.0;

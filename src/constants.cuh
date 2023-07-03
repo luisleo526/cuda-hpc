@@ -43,6 +43,9 @@ namespace DIM {
     const int YZ = 4;
     const int XZ = 5;
     const int CURV = 6;
+    const int D1 = 1;
+    const int D2 = 2;
+    const int D3 = 3;
 }
 
 namespace GRID {
