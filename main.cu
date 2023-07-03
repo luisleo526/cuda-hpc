@@ -37,8 +37,8 @@ int main() {
 //        phi.get_derivative_SEC(1, VAR::SCALAR, DIM::X);
 //        phi.get_derivative_SEC(2, VAR::SCALAR, DIM::XX);
 
-        phi.get_derivative_CCD(VAR::SCALAR, DIM::X);
-
+//        phi.get_derivative_CCD(VAR::SCALAR, DIM::X);
+        phi.get_derivative_UCCD(VAR::SCALAR, DIM::X, &phi);
         double err1, err2;
         err1 = 0.0;
         err2 = 0.0;

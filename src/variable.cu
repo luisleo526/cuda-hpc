@@ -459,7 +459,7 @@ void variable::get_derivative_UCCD(int d, int direction, variable *vel) {
 
                     for (int i = 0; i < NodeSize.x + 6; i++) {
 
-                        if (vel->f[VAR::U]->get(i, j, k, 0) > 0.0) {
+                        if (vel->f[VAR::U]->get(i - 3, j, k, 0) > 0.0) {
                             df[d]->set(ccd_solver->S[CCD::UPWIND][DIM::X][i], i - 3, j, k, DIM::X);
                         } else {
                             df[d]->set(ccd_solver->S[CCD::DOWNWIND][DIM::X][i], i - 3, j, k, DIM::X);
@@ -493,7 +493,7 @@ void variable::get_derivative_UCCD(int d, int direction, variable *vel) {
 
                     for (int j = 0; j < NodeSize.y + 6; j++) {
 
-                        if (vel->f[VAR::V]->get(i, j, k, 0) > 0.0) {
+                        if (vel->f[VAR::V]->get(i, j - 3, k, 0) > 0.0) {
                             df[d]->set(ccd_solver->S[CCD::UPWIND][DIM::Y][j], i, j - 3, k, DIM::Y);
                         } else {
                             df[d]->set(ccd_solver->S[CCD::DOWNWIND][DIM::Y][j], i, j - 3, k, DIM::Y);
@@ -530,7 +530,7 @@ void variable::get_derivative_UCCD(int d, int direction, variable *vel) {
 
                     for (int k = 0; k < NodeSize.z + 6; k++) {
 
-                        if (vel->f[VAR::W]->get(i, j, k, 0) > 0.0) {
+                        if (vel->f[VAR::W]->get(i, j, k - 3, 0) > 0.0) {
                             df[d]->set(ccd_solver->S[CCD::UPWIND][DIM::Z][k], i, j, k - 3, DIM::Z);
                         } else {
                             df[d]->set(ccd_solver->S[CCD::DOWNWIND][DIM::Z][k], i, j, k - 3, DIM::Z);
