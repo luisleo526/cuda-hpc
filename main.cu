@@ -1,21 +1,24 @@
 #include <iostream>
 #include "src/variable.cuh"
 #include "src/grids.cuh"
+#include "src/flux.cuh"
+#include "src/runge_kutta_solver.cuh"
 #include <cmath>
 #include <omp.h>
 #include <numbers>
-#include "src/flux.cuh"
+#include <string>
+#include <sstream>
 
 int main() {
 
-    double oerr1 = 0.0;
-    double oerr2 = 0.0;
+    double oerr = 0.0;
 
     std::cout << omp_get_max_threads() << std::endl;
 
-    for (int n = 0; n < 10; n++) {
+    for (int n = 0; n < 5; n++) {
 
-        Idim3 NodeSize(4 * (int) pow(2, n), 1, 1);
+        int N = 32 * (int) pow(2, n);
+        Idim3 NodeSize(N, 1, 1);
 //        Idim3 NodeSize(256, 1, 1);
         Idim3 GridSize(1, 1, 1);
         Idim3 id(0, 0, 0);
@@ -33,41 +36,71 @@ int main() {
         vel.f[VAR::U]->LinkNeighbor();
         vel.f[VAR::U]->assign_bc(0, BC::INFO(BC::CELL_CENTER_PERIODIC), BC::INFO(BC::CELL_CENTER_PERIODIC));
 
+        runge_kutta_solver tsolver(NodeSize, GridSize, id, 0, CUDA::PINNED_MEM);
+
         for (int i = 0; i < phi.NodeSize.x; i++) {
-            phi.f[VAR::SCALAR]->set(cos(std::numbers::pi * grid.get(i, 0, 0)), i, 0, 0);
-            vel.f[VAR::U]->set(1.0, i, 0, 0);
+            phi.f[VAR::SCALAR]->set(sin(std::numbers::pi * grid.get(i, 0, 0)), i, 0, 0);
+            vel.f[VAR::U]->set(-1.0, i, 0, 0);
         }
         phi.f[VAR::SCALAR]->apply_bc_x(0);
         vel.f[VAR::U]->apply_bc_x(0);
-        phi.f[VAR::SCALAR]->ToDevice();
-        vel.f[VAR::U]->ToDevice();
 
-//        phi.get_derivative_SEC(1, VAR::SCALAR, DIM::X);
-//        phi.get_derivative_SEC(2, VAR::SCALAR, DIM::XX);
+        double time = 0;
+        double dt = 0.01 * grid.h;
+        int iter = 0;
+        int pltid = 0;
 
-//        phi.get_derivative_CCD(VAR::SCALAR, DIM::X);
-        phi.get_derivative_UCCD(VAR::SCALAR, DIM::X, &phi);
-
-        double err1, err2;
-        err1 = 0.0;
-        err2 = 0.0;
-        for (int i = 1; i < phi.NodeSize.x - 1; i++) {
-            err1 += std::pow(phi.df[0]->get(i, 0, 0, DIM::X) +
-                             std::numbers::pi * sin(std::numbers::pi * grid.get(i, 0, 0, DIM::X)), 2.0);
-            err2 += std::pow(phi.ddf[0]->get(i, 0, 0, DIM::XX) +
-                             std::numbers::pi * std::numbers::pi * cos(std::numbers::pi * grid.get(i, 0, 0, DIM::X)),
-                             2.0);
+        FILE *fp;
+        std::ostringstream oss;
+        oss << "solution_" << pltid << ".txt";
+        fp = fopen(oss.str().c_str(), "w");
+        for (int i = 0; i < phi.NodeSize.x; i++) {
+            fprintf(fp, "%.4f, %.4f\n", grid.get(i, 0, 0), phi.f[VAR::SCALAR]->get(i, 0, 0));
         }
-        err1 = std::sqrt(err1 / phi.NodeSize.x);
-        err2 = std::sqrt(err2 / phi.NodeSize.x);
+        fclose(fp);
+        oss.str("");
+        oss.clear();
+        pltid++;
+
+        while (time < 2.0) {
+            tsolver.solve_tvdrk3(dt, &phi, VAR::SCALAR, &vel, &total_derivative);
+            phi.f[VAR::SCALAR]->apply_bc_x(0);
+            time += dt;
+            if (++iter * dt > pltid * 0.5) {
+                oss << "solution_" << pltid << ".txt";
+                fp = fopen(oss.str().c_str(), "w");
+                for (int i = 0; i < phi.NodeSize.x; i++) {
+                    fprintf(fp, "%.4f, %.4f\n", grid.get(i, 0, 0), phi.f[VAR::SCALAR]->get(i, 0, 0));
+                }
+                fclose(fp);
+                oss.str("");
+                oss.clear();
+                pltid++;
+            }
+        }
+
+        oss << "solution_" << pltid << ".txt";
+        fp = fopen(oss.str().c_str(), "w");
+        for (int i = 0; i < phi.NodeSize.x; i++) {
+            fprintf(fp, "%.4f, %.4f\n", grid.get(i, 0, 0), phi.f[VAR::SCALAR]->get(i, 0, 0));
+        }
+        fclose(fp);
+        oss.str("");
+        oss.clear();
+
+        double err = 0.0;
+        for (int i = 1; i < phi.NodeSize.x - 1; i++) {
+            double exact = sin(std::numbers::pi * (grid.get(i, 0, 0) - time));
+            err += std::pow(phi.f[VAR::SCALAR]->get(i, 0, 0) - exact, 2);
+
+        }
+        err = std::sqrt(err / phi.NodeSize.x);
 
         if (n > 0) {
-            printf("%d, %.4f, %.5e, %.4f, %.5e\n", 4 * (int) pow(2, n), (log(oerr1) - log(err1)) / (log(2.0)), err1,
-                   (log(oerr2) - log(err2)) / (log(2.0)), err2);
+            printf("%d, %.4f, %.5e\n", N, (log(oerr) - log(err)) / log(2.0), err);
         }
 
-        oerr1 = err1;
-        oerr2 = err2;
+        oerr = err;
 
     }
 

@@ -7,6 +7,6 @@
 #ifndef CUHPC_FLUX_CUH
 #define CUHPC_FLUX_CUH
 
-void total_derivative(variable *phi, variable *vel);
+void total_derivative(variable *phi, variable *vel, int d);
 
 #endif //CUHPC_FLUX_CUH

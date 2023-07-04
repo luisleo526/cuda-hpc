@@ -11,6 +11,9 @@ namespace CUDA {
 }
 
 namespace VAR {
+    const int STAGE_1 = 0;
+    const int STAGE_2 = 1;
+    const int STAGE_3 = 2;
     const int U = 0;
     const int V = 1;
     const int W = 2;

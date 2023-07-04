@@ -11,6 +11,18 @@ grids::grids(Idim3 _NodeSize, Idim3 _GridSize, Idim3 _id, int _gid, bool pinned,
     } else {
         as_cell_data(_domain_info);
     }
+
+    if (spatial_dim == DIM::D1) {
+        h = dx;
+        dv = dx;
+    } else if (spatial_dim == DIM::D2) {
+        h = dx < dy ? dx : dy;
+        dv = dx * dy;
+    } else {
+        h = dx < dy ? dx : dy;
+        h = h < dz ? h : dz;
+        dv = dx * dy * dz;
+    }
 }
 
 void grids::as_point_data(DOMAIN_INFO _domain_info) {
@@ -23,11 +35,11 @@ void grids::as_point_data(DOMAIN_INFO _domain_info) {
     double ys = spatial_dim > 1 ? _domain_info.yl + (_domain_info.yr - _domain_info.yl) / GridSize.y * id.y : 0.0;
     double zs = spatial_dim > 2 ? _domain_info.zl + (_domain_info.zr - _domain_info.zl) / GridSize.z * id.z : 0.0;
 
-    if (spatial_dim == 1) {
+    if (spatial_dim == DIM::D1) {
         for (int i = 0; i < dim; i++) {
             assign_bc(i, BC::INFO(BC::CELL_CENTER_NEUMANN), BC::INFO(BC::CELL_CENTER_NEUMANN));
         }
-    } else if (spatial_dim == 2) {
+    } else if (spatial_dim == DIM::D2) {
         for (int i = 0; i < dim; i++) {
             assign_bc(i,
                       BC::INFO(BC::CELL_CENTER_NEUMANN), BC::INFO(BC::CELL_CENTER_NEUMANN),
@@ -63,11 +75,11 @@ void grids::as_cell_data(DOMAIN_INFO _domain_info) {
     double ys = spatial_dim > 1 ? _domain_info.yl + (_domain_info.yr - _domain_info.yl) / GridSize.y * id.y : 0.0;
     double zs = spatial_dim > 2 ? _domain_info.zl + (_domain_info.zr - _domain_info.zl) / GridSize.z * id.z : 0.0;
 
-    if (spatial_dim == 1) {
+    if (spatial_dim == DIM::D1) {
         for (int i = 0; i < dim; i++) {
             assign_bc(i, BC::INFO(BC::CELL_CENTER_NEUMANN), BC::INFO(BC::CELL_CENTER_NEUMANN));
         }
-    } else if (spatial_dim == 2) {
+    } else if (spatial_dim == DIM::D2) {
         for (int i = 0; i < dim; i++) {
             assign_bc(i,
                       BC::INFO(BC::CELL_CENTER_NEUMANN), BC::INFO(BC::CELL_CENTER_NEUMANN),
