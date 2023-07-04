@@ -160,33 +160,33 @@ void variable::get_derivative_SEC(int level, int d, int direction) {
     if (level == 1) {
 
         switch (direction) {
-            case 0:
+            case DIM::X:
                 for (int k = 0; k < NodeSize.z; k++) {
                     for (int j = 0; j < NodeSize.y; j++) {
                         for (int i = 0; i < NodeSize.x; i++) {
-                            double val = 0.5 * (f[d]->get(i + 1, j, k, 0) - f[d]->get(i - 1, j, k, 0)) / grid->dx;
+                            double val = 0.5 * (f[d]->get(i + 1, j, k) - f[d]->get(i - 1, j, k)) / grid->dx;
                             df[d]->set(val, i, j, k, DIM::X);
                         }
                     }
                 }
                 break;
 
-            case 1:
+            case DIM::Y:
                 for (int k = 0; k < NodeSize.z; k++) {
                     for (int j = 0; j < NodeSize.y; j++) {
                         for (int i = 0; i < NodeSize.x; i++) {
-                            double val = 0.5 * (f[d]->get(i, j + 1, k, 0) - f[d]->get(i, j - 1, k, 0)) / grid->dy;
+                            double val = 0.5 * (f[d]->get(i, j + 1, k) - f[d]->get(i, j - 1, k)) / grid->dy;
                             df[d]->set(val, i, j, k, DIM::Y);
                         }
                     }
                 }
                 break;
 
-            case 2:
+            case DIM::Z:
                 for (int k = 0; k < NodeSize.z; k++) {
                     for (int j = 0; j < NodeSize.y; j++) {
                         for (int i = 0; i < NodeSize.x; i++) {
-                            double val = 0.5 * (f[d]->get(i, j, k + 1, 0) - f[d]->get(i, j, k - 1, 0)) / grid->dz;
+                            double val = 0.5 * (f[d]->get(i, j, k + 1) - f[d]->get(i, j, k - 1)) / grid->dz;
                             df[d]->set(val, i, j, k, DIM::Z);
                         }
                     }
@@ -198,36 +198,36 @@ void variable::get_derivative_SEC(int level, int d, int direction) {
 
         switch (direction) {
 
-            case 0:
+            case DIM::X:
                 for (int k = 0; k < NodeSize.z; k++) {
                     for (int j = 0; j < NodeSize.y; j++) {
                         for (int i = 0; i < NodeSize.x; i++) {
-                            double val = (f[d]->get(i + 1, j, k, 0) - 2.0 * f[d]->get(i, j, k, 0) +
-                                          f[d]->get(i - 1, j, k, 0)) / grid->dx / grid->dx;
+                            double val = (f[d]->get(i + 1, j, k) - 2.0 * f[d]->get(i, j, k) +
+                                          f[d]->get(i - 1, j, k)) / grid->dx / grid->dx;
                             ddf[d]->set(val, i, j, k, DIM::XX);
                         }
                     }
                 }
                 break;
 
-            case 1:
+            case DIM::Y:
                 for (int k = 0; k < NodeSize.z; k++) {
                     for (int j = 0; j < NodeSize.y; j++) {
                         for (int i = 0; i < NodeSize.x; i++) {
-                            double val = (f[d]->get(i, j + 1, k, 0) - 2.0 * f[d]->get(i, j, k, 0) +
-                                          f[d]->get(i, j - 1, k, 0)) / grid->dy / grid->dy;
+                            double val = (f[d]->get(i, j + 1, k) - 2.0 * f[d]->get(i, j, k) +
+                                          f[d]->get(i, j - 1, k)) / grid->dy / grid->dy;
                             ddf[d]->set(val, i, j, k, DIM::YY);
                         }
                     }
                 }
                 break;
 
-            case 2:
+            case DIM::Z:
                 for (int k = 0; k < NodeSize.z; k++) {
                     for (int j = 0; j < NodeSize.y; j++) {
                         for (int i = 0; i < NodeSize.x; i++) {
-                            double val = (f[d]->get(i, j, k + 1, 0) - 2.0 * f[d]->get(i, j, k, 0) +
-                                          f[d]->get(i, j, k - 1, 0)) / grid->dz / grid->dz;
+                            double val = (f[d]->get(i, j, k + 1) - 2.0 * f[d]->get(i, j, k) +
+                                          f[d]->get(i, j, k - 1)) / grid->dz / grid->dz;
                             ddf[d]->set(val, i, j, k, DIM::ZZ);
                         }
                     }
@@ -459,7 +459,7 @@ void variable::get_derivative_UCCD(int d, int direction, variable *vel) {
 
                     for (int i = 0; i < NodeSize.x + 6; i++) {
 
-                        if (vel->f[VAR::U]->get(i - 3, j, k, 0) > 0.0) {
+                        if (vel->f[VAR::U]->get(i - 3, j, k) > 0.0) {
                             df[d]->set(ccd_solver->S[CCD::UPWIND][DIM::X][i], i - 3, j, k, DIM::X);
                         } else {
                             df[d]->set(ccd_solver->S[CCD::DOWNWIND][DIM::X][i], i - 3, j, k, DIM::X);
@@ -493,7 +493,7 @@ void variable::get_derivative_UCCD(int d, int direction, variable *vel) {
 
                     for (int j = 0; j < NodeSize.y + 6; j++) {
 
-                        if (vel->f[VAR::V]->get(i, j - 3, k, 0) > 0.0) {
+                        if (vel->f[VAR::V]->get(i, j - 3, k) > 0.0) {
                             df[d]->set(ccd_solver->S[CCD::UPWIND][DIM::Y][j], i, j - 3, k, DIM::Y);
                         } else {
                             df[d]->set(ccd_solver->S[CCD::DOWNWIND][DIM::Y][j], i, j - 3, k, DIM::Y);
@@ -530,7 +530,7 @@ void variable::get_derivative_UCCD(int d, int direction, variable *vel) {
 
                     for (int k = 0; k < NodeSize.z + 6; k++) {
 
-                        if (vel->f[VAR::W]->get(i, j, k - 3, 0) > 0.0) {
+                        if (vel->f[VAR::W]->get(i, j, k - 3) > 0.0) {
                             df[d]->set(ccd_solver->S[CCD::UPWIND][DIM::Z][k], i, j, k - 3, DIM::Z);
                         } else {
                             df[d]->set(ccd_solver->S[CCD::DOWNWIND][DIM::Z][k], i, j, k - 3, DIM::Z);
@@ -548,6 +548,74 @@ void variable::get_derivative_UCCD(int d, int direction, variable *vel) {
             }
             break;
 
+    }
+
+}
+
+void variable::get_derivative_USEC(int d, int direction, variable *vel) {
+
+    assert(d < dim);
+    assert(direction < spatial_dim && direction < vel->spatial_dim);
+    assert(derivative_level > 0);
+
+    switch (direction) {
+        case DIM::X:
+            for (int k = 0; k < NodeSize.z; k++) {
+                for (int j = 0; j < NodeSize.y; j++) {
+                    for (int i = 0; i < NodeSize.x; i++) {
+                        if (vel->f[VAR::U]->get(i, j, k) > 0.0) {
+                            double val =
+                                    (3.0 * f[d]->get(i, j, k) - 4.0 * f[d]->get(i - 1, j, k) + f[d]->get(i - 2, j, k)) /
+                                    2.0 / grid->dx;
+                            df[d]->set(val, i, j, k, DIM::X);
+                        } else {
+                            double val =
+                                    (-3.0 * f[d]->get(i, j, k) + 4.0 * f[d]->get(i + 1, j, k) -
+                                     f[d]->get(i + 2, j, k)) / 2.0 / grid->dx;
+                            df[d]->set(val, i, j, k, DIM::X);
+                        }
+                    }
+                }
+            }
+            break;
+        case DIM::Y:
+            for (int k = 0; k < NodeSize.z; k++) {
+                for (int j = 0; j < NodeSize.y; j++) {
+                    for (int i = 0; i < NodeSize.x; i++) {
+                        if (vel->f[VAR::V]->get(i, j, k) > 0.0) {
+                            double val =
+                                    (3.0 * f[d]->get(i, j, k) - 4.0 * f[d]->get(i, j - 1, k) + f[d]->get(i, j - 2, k)) /
+                                    2.0 / grid->dy;
+                            df[d]->set(val, i, j, k, DIM::Y);
+                        } else {
+                            double val =
+                                    (-3.0 * f[d]->get(i, j, k) + 4.0 * f[d]->get(i, j + 1, k) -
+                                     f[d]->get(i, j + 2, k)) / 2.0 / grid->dy;
+                            df[d]->set(val, i, j, k, DIM::Y);
+                        }
+                    }
+                }
+            }
+            break;
+        case DIM::Z:
+            for (int k = 0; k < NodeSize.z; k++) {
+                for (int j = 0; j < NodeSize.y; j++) {
+                    for (int i = 0; i < NodeSize.x; i++) {
+                        if (vel->f[VAR::W]->get(i, j, k) > 0.0) {
+                            double val =
+                                    (3.0 * f[d]->get(i, j, k) - 4.0 * f[d]->get(i, j, k - 1) + f[d]->get(i, j, k - 2)) /
+                                    2.0 / grid->dz;
+                            df[d]->set(val, i, j, k, DIM::Z);
+                        } else {
+                            double val =
+                                    (-3.0 * f[d]->get(i, j, k) + 4.0 * f[d]->get(i, j, k + 1) -
+                                     f[d]->get(i, j, k + 2)) / 2.0 / grid->dz;
+                            df[d]->set(val, i, j, k, DIM::Z);
+                        }
+                    }
+                }
+            }
+            break;
     }
 
 }

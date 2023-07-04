@@ -32,6 +32,7 @@ public:
     void assign_CCD_source(int d, int direction, int type, int I, int J, int K);
     void get_derivative_CCD(int d, int direction);
     void get_derivative_UCCD(int d, int direction, variable *vel);
+    void get_derivative_USEC(int d, int direction, variable *vel);
 
 };
 
