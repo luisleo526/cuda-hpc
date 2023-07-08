@@ -22,14 +22,14 @@ int main() {
         }
 
         double oerr = 0.0;
-        for (int n = 0; n < 5; n++) {
+        for (int n = 0; n < 7; n++) {
 
             int N = 16 * (int) pow(2, n);
             Idim3 NodeSize(N, 1, 1);
             Idim3 GridSize(1, 1, 1);
             Idim3 id(0, 0, 0);
 
-            grids grid(NodeSize, GridSize, id, 0, CUDA::UNPINNED_MEM, DOMAIN_INFO(-1.0, 1.0), false);
+            grids grid(NodeSize, GridSize, id, 0, CUDA::UNPINNED_MEM, DOMAIN_INFO(-1.0, 1.0), true);
             grid.LinkNeighbor();
             grid.apply_bc_x(0);
             grid.ToDevice();
@@ -52,7 +52,7 @@ int main() {
             vel.f[VAR::U]->apply_bc_x(0);
 
             double time = 0;
-            double dt = 0.1 / 512.0;
+            double dt = 0.1 / 1024.0;
 
 //            int iter = 0;
 //            int pltid = 0;
@@ -97,7 +97,7 @@ int main() {
 
             double err = 0.0;
             for (int i = 0; i < phi.NodeSize.x; i++) {
-                double exact = sin(std::numbers::pi * (grid.get(i, 0, 0) - time + 2.0));
+                double exact = sin(std::numbers::pi * (grid.get(i, 0, 0) - time * (double) wind));
                 err += std::pow(phi.f[VAR::SCALAR]->get(i, 0, 0) - exact, 2);
 
             }
