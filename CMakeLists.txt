@@ -33,8 +33,10 @@ list ( APPEND PRJ_LIBRARIES OpenMP::OpenMP_CXX )
 
 set ( CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -Xcompiler=${OpenMP_CXX_FLAGS}" )
 
-file(GLOB SOURCES "src/*.cu" "src/*.cuh")
-add_executable ( ${PROJECT_NAME} ${SOURCES} main.cu )
+file(GLOB SOURCES "src/*.cu")
+add_executable ( ${PROJECT_NAME} ${SOURCES} uccd_roc.cu)
+
+# Make Tests
 
 set_target_properties( ${PROJECT_NAME}
         PROPERTIES

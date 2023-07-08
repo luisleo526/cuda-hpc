@@ -114,42 +114,37 @@ ccd::ccd(Idim3 _Nodesize, int _gid, grids *_grid) {
         }
     }
 
-    double alpha_1 = 2.0;
-    double beta_1 = -1.0;
-    double alpha_2 = 5.0;
-    double beta_2 = -6.0;
-
     for (int type = 0; type < NUM_OF_TYPES; type++) {
         for (int d = 0; d < NUM_OF_DIMS; d++) {
             A[type][d][0][0] = 0.0;
             A[type][d][1][0] = 1.0;
-            A[type][d][2][0] = alpha_1;
+            A[type][d][2][0] = 2.0;
 
             B[type][d][0][0] = 0.0;
             B[type][d][1][0] = 0.0;
-            B[type][d][2][0] = beta_1 * mesh_size[d];
+            B[type][d][2][0] = - mesh_size[d];
 
             AA[type][d][0][0] = 0.0;
             AA[type][d][1][0] = 0.0;
-            AA[type][d][2][0] = beta_2 / mesh_size[d];
+            AA[type][d][2][0] = -2.5 / mesh_size[d];
 
             BB[type][d][0][0] = 0.0;
             BB[type][d][1][0] = 1.0;
-            BB[type][d][2][0] = alpha_2;
+            BB[type][d][2][0] = 8.5;
 
-            A[type][d][0][Nodesize[d] - 1] = alpha_1;
+            A[type][d][0][Nodesize[d] - 1] = 2.0;
             A[type][d][1][Nodesize[d] - 1] = 1.0;
             A[type][d][2][Nodesize[d] - 1] = 0.0;
 
-            B[type][d][0][Nodesize[d] - 1] = -beta_1 * mesh_size[d];
+            B[type][d][0][Nodesize[d] - 1] = mesh_size[d];
             B[type][d][1][Nodesize[d] - 1] = 0.0;
             B[type][d][2][Nodesize[d] - 1] = 0.0;
 
-            AA[type][d][0][Nodesize[d] - 1] = -beta_2 / mesh_size[d];
+            AA[type][d][0][Nodesize[d] - 1] = 2.5 / mesh_size[d];
             AA[type][d][1][Nodesize[d] - 1] = 0.0;
             AA[type][d][2][Nodesize[d] - 1] = 0.0;
 
-            BB[type][d][0][Nodesize[d] - 1] = alpha_2;
+            BB[type][d][0][Nodesize[d] - 1] = 8.5;
             BB[type][d][1][Nodesize[d] - 1] = 1.0;
             BB[type][d][2][Nodesize[d] - 1] = 0.0;
         }

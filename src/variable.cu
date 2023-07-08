@@ -314,13 +314,6 @@ void variable::get_derivative_CCD(int d, int direction) {
 
 void variable::assign_CCD_source(int d, int direction, int type, int I, int J, int K) {
 
-    double bda1 = -3.5;
-    double bdb1 = 4.0;
-    double bdc1 = -0.5;
-    double bda2 = 9.0;
-    double bdb2 = -12.0;
-    double bdc2 = 3.0;
-
     double s, ss;
 
     switch (direction) {
@@ -340,19 +333,19 @@ void variable::assign_CCD_source(int d, int direction, int type, int I, int J, i
                 ccd_solver->SS[type][DIM::X][i + 3] = ss;
             }
 
-
-            s = (bda1 * f[d]->get(-3, J, K, 0) + bdb1 * f[d]->get(-2, J, K, 0) +
-                 bdc1 * f[d]->get(-1, J, K, 0)) / grid->dx;
-            ss = (bda2 * f[d]->get(-3, J, K, 0) + bdb2 * f[d]->get(-2, J, K, 0) +
-                  bdc2 * f[d]->get(-1, J, K, 0)) / grid->dx / grid->dx;
+            s = (-3.5 * f[d]->get(-3, J, K) + 4.0 * f[d]->get(-2, J, K) +
+                 -0.5 * f[d]->get(-1, J, K)) / grid->dx;
+            ss = (34.0 / 3.0 * f[d]->get(-3, J, K) - 83.0 / 4.0 * f[d]->get(-2, J, K) +
+                  10.0 * f[d]->get(-1, J, K) - 7.0 / 12.0 * f[d]->get(0, J, K)) / grid->dx / grid->dx;
 
             ccd_solver->S[type][DIM::X][0] = s;
             ccd_solver->SS[type][DIM::X][0] = ss;
 
-            s = -(bda1 * f[d]->get(NodeSize.x + 2, J, K, 0) + bdb1 * f[d]->get(NodeSize.x + 1, J, K, 0) +
-                  bdc1 * f[d]->get(NodeSize.x, J, K, 0)) / grid->dx;
-            ss = (bda2 * f[d]->get(NodeSize.x + 2, J, K, 0) + bdb2 * f[d]->get(NodeSize.x + 1, J, K, 0) +
-                  bdc2 * f[d]->get(NodeSize.x, J, K, 0)) / grid->dx / grid->dx;
+            s = -(-3.5 * f[d]->get(NodeSize.x + 2, J, K) + 4.0 * f[d]->get(NodeSize.x + 1, J, K) +
+                  -0.5 * f[d]->get(NodeSize.x, J, K)) / grid->dx;
+            ss = (34.0 / 3.0 * f[d]->get(NodeSize.x + 2, J, K) - 83.0 / 4.0 * f[d]->get(NodeSize.x + 1, J, K) +
+                  10.0 * f[d]->get(NodeSize.x, J, K) - 7.0 / 12.0 * f[d]->get(NodeSize.x - 1, J, K)) / grid->dx /
+                 grid->dx;
 
             ccd_solver->S[type][DIM::X][NodeSize.x + 5] = s;
             ccd_solver->SS[type][DIM::X][NodeSize.x + 5] = ss;
@@ -375,19 +368,20 @@ void variable::assign_CCD_source(int d, int direction, int type, int I, int J, i
                 ccd_solver->SS[type][DIM::Y][j + 3] = ss;
             }
 
-
-            s = (bda1 * f[d]->get(I, -3, K, 0) + bdb1 * f[d]->get(I, -2, K, 0) +
-                 bdc1 * f[d]->get(I, -1, K, 0)) / grid->dy;
-            ss = (bda2 * f[d]->get(I, -3, K, 0) + bdb2 * f[d]->get(I, -2, K, 0) +
-                  bdc2 * f[d]->get(I, -1, K, 0)) / grid->dy / grid->dy;
+            s = (-3.5 * f[d]->get(I, -3, K) + 4.0 * f[d]->get(I, -2, K) +
+                 -0.5 * f[d]->get(I, -1, K)) / grid->dy;
+            ss = (34.0 / 3.0 * f[d]->get(I, -3, K) - 83.0 / 4.0 * f[d]->get(I, -2, K) +
+                  10.0 * f[d]->get(I, -1, K) - 7.0 / 12.0 * f[d]->get(I, 0, K)) / grid->dy / grid->dy;
 
             ccd_solver->S[type][DIM::Y][0] = s;
             ccd_solver->SS[type][DIM::Y][0] = ss;
 
-            s = -(bda1 * f[d]->get(I, NodeSize.y + 2, K, 0) + bdb1 * f[d]->get(I, NodeSize.y + 1, K, 0) +
-                  bdc1 * f[d]->get(I, NodeSize.y, K, 0)) / grid->dy;
-            ss = (bda2 * f[d]->get(I, NodeSize.y + 2, K, 0) + bdb2 * f[d]->get(I, NodeSize.y + 1, K, 0) +
-                  bdc2 * f[d]->get(I, NodeSize.y, K, 0)) / grid->dy / grid->dy;
+            s = -(-3.5 * f[d]->get(I, NodeSize.y + 2, K) + 4.0 * f[d]->get(I, NodeSize.y + 1, K) +
+                  -0.5 * f[d]->get(I, NodeSize.y, K)) / grid->dy;
+
+            ss = (34.0 / 3.0 * f[d]->get(I, NodeSize.y + 2, K) - 83.0 / 4.0 * f[d]->get(I, NodeSize.y + 1, K) +
+                  10.0 * f[d]->get(I, NodeSize.y, K) - 7.0 / 12.0 * f[d]->get(I, NodeSize.y - 1, K)) / grid->dy /
+                 grid->dy;
 
             ccd_solver->S[type][DIM::Y][NodeSize.y + 5] = s;
             ccd_solver->SS[type][DIM::Y][NodeSize.y + 5] = ss;
@@ -410,19 +404,21 @@ void variable::assign_CCD_source(int d, int direction, int type, int I, int J, i
                 ccd_solver->SS[type][DIM::Z][k + 3] = ss;
             }
 
-            s = (bda1 * f[d]->get(I, J, -3, 0) + bdb1 * f[d]->get(I, J, -2, 0) +
-                 bdc1 * f[d]->get(I, J, -1, 0)) / grid->dz;
-            ss = (bda2 * f[d]->get(I, J, -3, 0) + bdb2 * f[d]->get(I, J, -2, 0) +
-                  bdc2 * f[d]->get(I, J, -1, 0)) / grid->dz / grid->dz;
+            s = (-3.5 * f[d]->get(I, J, -3, 0) + 4.0 * f[d]->get(I, J, -2, 0) +
+                 -0.5 * f[d]->get(I, J, -1, 0)) / grid->dz;
+
+            ss = (34.0 / 3.0 * f[d]->get(I, J, -3, 0) - 83.0 / 4.0 * f[d]->get(I, J, -2, 0) +
+                  10.0 * f[d]->get(I, J, -1, 0) - 7.0 / 12.0 * f[d]->get(I, J, 0, 0)) / grid->dz / grid->dz;
 
             ccd_solver->S[type][DIM::Z][0] = s;
             ccd_solver->SS[type][DIM::Z][0] = ss;
 
-            s = -(bda1 * f[d]->get(I, J, NodeSize.z + 2, 0) + bdb1 * f[d]->get(I, J, NodeSize.z + 1, 0) +
-                  bdc1 * f[d]->get(I, J, NodeSize.z, 0)) / grid->dz;
+            s = -(-3.5 * f[d]->get(I, J, NodeSize.z + 2, 0) + 4.0 * f[d]->get(I, J, NodeSize.z + 1, 0) +
+                  -0.5 * f[d]->get(I, J, NodeSize.z, 0)) / grid->dz;
 
-            ss = (bda2 * f[d]->get(I, J, NodeSize.z + 2, 0) + bdb2 * f[d]->get(I, J, NodeSize.z + 1, 0) +
-                  bdc2 * f[d]->get(I, J, NodeSize.z, 0)) / grid->dz / grid->dz;
+            ss = (34.0 / 3.0 * f[d]->get(I, J, NodeSize.z + 2, 0) - 83.0 / 4.0 * f[d]->get(I, J, NodeSize.z + 1, 0) +
+                  10.0 * f[d]->get(I, J, NodeSize.z, 0) - 7.0 / 12.0 * f[d]->get(I, J, NodeSize.z - 1, 0)) / grid->dz /
+                 grid->dz;
 
             ccd_solver->S[type][DIM::Z][NodeSize.z + 5] = s;
             ccd_solver->SS[type][DIM::Z][NodeSize.z + 5] = ss;
